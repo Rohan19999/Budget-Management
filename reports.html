@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&family=JetBrains+Mono:wght=400;500;600&family=Inter:wght=300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style/reports.css">
+    <link rel="stylesheet" href="./style/sidebar.css">
+    <style>
+    .embedded .sidebar,
+    .embedded .top-bar,
+    .embedded .back-link-btn,
+    .embedded .breadcrumb,
+    .embedded .breadcrumb-container,
+    .embedded .sys-footer {
+        display: none !important;
+    }
+    .embedded .wrapper {
+        margin-left: 0 !important;
+    }
+    .embedded .content-area {
+        padding-top: 0 !important;
+    }
+    .embedded html,
+    .embedded body {
+        overflow-x: hidden !important;
+        overflow-y: scroll !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+    .embedded body::-webkit-scrollbar {
+        width: 0px !important;
+        background: transparent !important;
+    }
+    .embedded body::-webkit-scrollbar-track {
+        background: transparent !important;
+    }
+    .embedded body::-webkit-scrollbar-thumb {
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+    .embedded *::-webkit-scrollbar {
+        width: 0px !important;
+        background: transparent !important;
+    }
+    .embedded *::-webkit-scrollbar-thumb {
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+    .embedded body { scrollbar-color: transparent transparent !important; }
+    </style>
+    <script>
+      if (window.self !== window.top) {
+        document.documentElement.classList.add('embedded');
+      }
+    </script>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-glass">
+                <img src="./Image/logo.png" alt="EMC Logo" class="sidebar-logo-img">
+            </div>
+            <h1 class="sidebar-logo-title">Budget Management</h1>
+            <p class="sidebar-logo-subtitle">Internal Finance Platform</p>
+        </div>
+        <div class="nav-links">
+            <a href="finance.html" class="nav-item">
+                <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span> Dashboard Core
+            </a>
+            <a href="datamanagement.html" class="nav-item active">
+                <span class="nav-icon"><i class="fa-solid fa-wallet"></i></span> Finance Hub
+            </a>
+            <div class="nav-sub-links">
+                <a href="masterdata.html" class="nav-sub-item">Create Master Data</a>
+                <a href="viewdata.html" class="nav-sub-item">View Data</a>
+                <a href="reports.html" class="nav-sub-item active">Report Generation</a>
+                <a href="usermanagement.html" class="nav-sub-item">User Management</a>
+            </div>
+            <a href="#" class="nav-item">
+                <span class="nav-icon"><i class="fa-solid fa-gear"></i></span> System Settings
+            </a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="user-profile-section">
+                <div class="user-avatar" id="sidebarAvatar">U</div>
+                <div class="user-meta">
+                    <span class="user-name" id="sidebarUserName">Loading...</span>
+                    <span class="user-role-label" id="sidebarUserRole">Operator</span>
+                </div>
+            </div>
+            <button class="logout-btn" id="sidebarLogoutBtn">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Sign Out</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="wrapper">
+        
+        <header class="top-bar">
+            <div class="breadcrumb">
+                <span class="bc-muted">Workspace /</span> 
+                <strong class="bc-active">Analytical Reports Node</strong>
+            </div>
+
+            <div class="user-profile">
+                <div class="profile-info">
+                    <h2 id="welcomeLabel">Authentication Required</h2>
+                    <div class="secure-session-indicator">
+                        <span class="pulse-dot"></span>
+                        <span class="profile-status">Secure Tunnel 02</span>
+                    </div>
+                </div>
+                <div class="avatar" id="userInitial">AD</div>
+            </div>
+        </header>
+
+        <div class="content-area">
+            
+            <div style="margin-bottom: 15px;">
+                <a href="datamanagement.html" class="back-link-btn">← Back to Data Management</a>
+            </div>
+
+            <div class="section-title-block">
+                <h2>Report Generation</h2>
+               
+            </div>
+
+            <div class="container-grid">
+                <div class="form-column">
+
+                    <div class="form-card" style="margin-bottom: 30px;">
+                        <div class="secure-box-header" style="margin-bottom: 25px;">
+                            <span>Report Controls</span>
+                        </div>
+                        
+                        <div class="row row-inline">
+                            <label class="field-label" for="reportMonth">Choose Month</label>
+                            <div class="input-wrapper">
+                                <select id="reportMonth" class="select-field">
+                                    <option value="">Loading months...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-header-static">
+                            <div class="header-title-flex">
+                                <span> Monthly Report </span>
+                                <span class="role-pill" id="periodLabel">Select Month</span>
+                            </div>
+                            <span class="badge-tag" id="statusText">Checking system state...</span>
+                        </div>
+                        
+                        <div class="box-body">
+                            <div class="view-ops-bar">
+                                <div class="view-tabs" role="tablist" aria-label="Report view selector">
+                                    <button class="view-tab active" type="button" data-view="abstract" aria-selected="true">‹ Abstract View</button>
+                                    <button class="view-tab" type="button" data-view="detailed" aria-selected="false"> Detailed Payment Budget</button>
+                                </div>
+                                <button class="btn btn-success-action" onclick="downloadReportExcel()">
+                                     Download Excel Report
+                                </button>
+                            </div>
+
+                            <div id="reportArea"></div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+           <footer class="sys-footer">
+            <div class="footer-segment">
+                <span class="footer-indicator"></span>
+                <span>© Budget Management System</span>
+            </div>
+            <div class="footer-node">
+                <span id="time">--:--:--</span>
+                <span style="color: #b0c4de; margin-left: 10px;">| IN-NODE-01</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+    const API_BASE = "http://localhost:5050";
+
+    function escapeHtml(value){
+        return String(value || "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    function formatAmount(value){
+        return Number(value || 0).toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function getComponentStats(rows, components = []){
+        const componentIds = new Set();
+        if(Array.isArray(components) && components.length > 0){
+            components.forEach((component) => {
+                if(component.componentId || component.id){
+                    componentIds.add(String(component.componentId || component.id));
+                }
+            });
+        }
+        rows.forEach((row) => {
+            if(row.componentId){ componentIds.add(String(row.componentId)); }
+        });
+        return {
+            componentCount: componentIds.size,
+            subComponentCount: rows.length
+        };
+    }
+
+    function groupRows(rows, components = []){
+        const groups = [];
+        const byId = new Map();
+
+        const addGroup = (component) => {
+            const componentId = String(component.componentId || component.id || "");
+            if(!componentId || byId.has(componentId)){ return; }
+            const group = {
+                componentId,
+                componentItemId: component.componentItemId || component.itemId || "",
+                componentName: component.componentName || component.name || "",
+                rows: []
+            };
+            byId.set(componentId, group);
+            groups.push(group);
+        };
+
+        if(Array.isArray(components)){ components.forEach(addGroup); }
+
+        rows.forEach((row) => {
+            const componentId = String(row.componentId || "");
+            if(!byId.has(componentId)){
+                addGroup({
+                    componentId,
+                    componentItemId: row.componentItemId || "",
+                    componentName: row.componentName || ""
+                });
+            }
+            byId.get(componentId).rows.push(row);
+        });
+        return groups;
+    }
+
+    function renderDetailedRows(rows, components = []){
+        if(rows.length === 0){
+            return '<div class="empty">No audit records found for this specific timeline node.</div>';
+        }
+
+        const budgetApproved = Boolean(reportData && reportData.budgetApproved);
+        const budgetColumnLabel = budgetApproved ? "APPROVED BUDGET" : "PROPOSED BUDGET";
+        const approvalHiddenStyle = budgetApproved ? "" : ' style="display:none;"';
+        const groups = groupRows(rows, components);
+        const grandTotals = groups.reduce((totals, group) => {
+            const totalExisting = group.rows.reduce((sum, row) => sum + Number(row.existingLiability || 0), 0);
+            const totalEstimated = group.rows.reduce((sum, row) => sum + Number(row.estimatedLiability || 0), 0);
+            const totalTel = totalExisting + totalEstimated;
+            const totalProposed = group.rows.reduce((sum, row) => sum + Number(row.proposedBudget || row.amountValue || 0), 0);
+            const totalBalance = totalTel - totalProposed;
+            const totalActualPayment = group.rows.reduce((sum, row) => sum + Number(row.actualPayment || row.actualPaid || row.paidAmount || 0), 0);
+
+            return {
+                existingLiability: totals.existingLiability + totalExisting,
+                estimatedLiability: totals.estimatedLiability + totalEstimated,
+                totalEstimatedLiability: totals.totalEstimatedLiability + totalTel,
+                proposedBudget: totals.proposedBudget + totalProposed,
+                balanceLiability: totals.balanceLiability + totalBalance,
+                actualPayment: totals.actualPayment + totalActualPayment
+            };
+        }, { existingLiability: 0, estimatedLiability: 0, totalEstimatedLiability: 0, proposedBudget: 0, balanceLiability: 0, actualPayment: 0 });
+
+        const tableRows = groups.map((group, groupIndex) => {
+            const totalExisting = group.rows.reduce((sum, row) => sum + Number(row.existingLiability || 0), 0);
+            const totalEstimated = group.rows.reduce((sum, row) => sum + Number(row.estimatedLiability || 0), 0);
+            const totalTel = totalExisting + totalEstimated;
+            const totalProposed = group.rows.reduce((sum, row) => sum + Number(row.proposedBudget || row.amountValue || 0), 0);
+            const totalBalance = totalTel - totalProposed;
+            const totalActualPayment = group.rows.reduce((sum, row) => sum + Number(row.actualPayment || row.actualPaid || row.paidAmount || 0), 0);
+
+            const subRows = group.rows.map((row, index) => {
+                const balanceLiability = (Number(row.existingLiability || 0) + Number(row.estimatedLiability || 0)) - Number(row.proposedBudget || row.amountValue || 0);
+                const actualPayment = Number(row.actualPayment || row.actualPaid || row.paidAmount || 0);
+                const rowBalance = balanceLiability - actualPayment;
+                const baseSerial = group.componentItemId || String(groupIndex + 1);
+                const serialNumber = `${baseSerial}.${index + 1}`;
+
+         return `
+    <tr class="detail-row-${group.componentId} hide-row">
+        <td class="center-mono-cell">${escapeHtml(serialNumber)}</td>
+        <td class="particulars-name-cell">${escapeHtml(row.name || "")}</td>
+        <td class="amount">${formatAmount(row.existingLiability)}</td>
+        <td class="amount">${formatAmount(row.estimatedLiability)}</td>
+        <td class="amount text-derived-static">${formatAmount(Number(row.existingLiability || 0) + Number(row.estimatedLiability || 0))}</td>
+        <td class="amount">${formatAmount(row.proposedBudget || row.amountValue || 0)}</td>
+        <td class="amount text-derived-static">${formatAmount(balanceLiability)}</td>
+        <td class="amount"${approvalHiddenStyle}>${formatAmount(actualPayment)}</td>
+        <td class="amount text-derived-static"${approvalHiddenStyle}>${formatAmount(rowBalance)}</td>
+        <td></td>
+    </tr>
+`;
+            }).join("");
+
+            return `
+<tr class="component-total-row">
+
+    <td class="center-mono-cell">
+        ${escapeHtml(group.componentItemId)}
+    </td>
+
+    <td class="particulars-name-cell">
+        ${escapeHtml(group.componentName)}
+    </td>
+
+    <td class="text-amount">
+        <strong>${formatAmount(totalExisting)}</strong>
+    </td>
+
+    <td class="text-amount">
+        <strong>${formatAmount(totalEstimated)}</strong>
+    </td>
+
+    <td class="text-amount">
+        <strong>${formatAmount(totalTel)}</strong>
+    </td>
+
+    <td class="text-amount">
+        <strong>${formatAmount(totalProposed)}</strong>
+    </td>
+
+    <td class="text-amount">
+        <strong>${formatAmount(totalBalance)}</strong>
+    </td>
+
+    <td class="text-amount"${approvalHiddenStyle}>
+        <strong>${formatAmount(totalActualPayment)}</strong>
+    </td>
+
+    <td class="text-amount"${approvalHiddenStyle}>
+        <strong>${formatAmount(totalBalance - totalActualPayment)}</strong>
+    </td>
+
+    <td class="toggle-column">
+        <button
+            type="button"
+            class="group-toggle-btn"
+            id="arrow-${group.componentId}"
+            onclick="toggleGroup('${group.componentId}')"
+        >
+            ↓
+        </button>
+    </td>
+
+</tr>
+
+${subRows}
+`;
+        }).join("");
+
+        const grandTotalRow = `
+            <tr class="component-total-row grand-summary-bg">
+    <td colspan="2"
+        style="background:#FFD700 !important; color:#000; font-size:16px; font-weight:800; padding:12px 20px;">
+        TOTAL ACCOUNT SUMMARY
+    </td>
+
+    <td class="amount" style="background:#FFD700 !important;"><strong>${formatAmount(grandTotals.existingLiability)}</strong></td>
+    <td class="amount" style="background:#FFD700 !important;"><strong>${formatAmount(grandTotals.estimatedLiability)}</strong></td>
+    <td class="amount" style="background:#FFD700 !important;"><strong>${formatAmount(grandTotals.totalEstimatedLiability)}</strong></td>
+    <td class="amount" style="background:#FFD700 !important;"><strong>${formatAmount(grandTotals.proposedBudget)}</strong></td>
+    <td class="amount" style="background:#FFD700 !important;"><strong>${formatAmount(grandTotals.balanceLiability)}</strong></td>
+    <td class="amount" ${approvalHiddenStyle} style="background:#FFD700 !important;"><strong>${formatAmount(grandTotals.actualPayment)}</strong></td>
+    <td class="amount" ${approvalHiddenStyle} style="background:#FFD700 !important;"><strong>${formatAmount(grandTotals.balanceLiability - grandTotals.actualPayment)}</strong></td>
+    <td class="amount" style="background:#FFD700 !important;"></td>
+</tr>
+        `;
+
+        return `
+            <div class="table-wrapper">
+                <table class="view-data-matrix">
+                    <thead>
+               <tr>
+    <th class="sl-no-th">SL. NO</th>
+    <th>PARTICULARS</th>
+    <th class="amount-th">EXISTING LIABILITY</th>
+    <th class="amount-th">ESTIMATED LIABILITY</th>
+    <th class="amount-th-wide">TOTAL ESTIMATED</th>
+    <th class="amount-th">${budgetColumnLabel}</th>
+    <th class="amount-th-wide">BALANCE LIABILITY</th>
+    <th class="amount-th"${approvalHiddenStyle}>ACTUAL PAYMENT</th>
+    <th class="amount-th"${approvalHiddenStyle}>NET BALANCE</th>
+    <th class="toggle-column"></th>
+</tr>
+                    </thead>
+                    <tbody>${tableRows}${grandTotalRow}</tbody>
+                </table>
+            </div>
+        `;
+    }
+
+    function renderAbstractRows(rows, components = []){
+        if(rows.length === 0){
+            return '<div class="empty">No audit records found for this specific timeline node.</div>';
+        }
+
+        const budgetApproved = Boolean(reportData && reportData.budgetApproved);
+        const budgetColumnLabel = budgetApproved ? "APPROVED BUDGET" : "PROPOSED BUDGET";
+        const approvalHiddenStyle = budgetApproved ? "" : ' style="display:none;"';
+        const groups = groupRows(rows, components);
+        const grandTotals = groups.reduce((totals, group) => {
+            const totalExisting = group.rows.reduce((sum, row) => sum + Number(row.existingLiability || 0), 0);
+            const totalEstimated = group.rows.reduce((sum, row) => sum + Number(row.estimatedLiability || 0), 0);
+            const totalTel = totalExisting + totalEstimated;
+            const totalProposed = group.rows.reduce((sum, row) => sum + Number(row.proposedBudget || row.amountValue || 0), 0);
+            const totalBalance = totalTel - totalProposed;
+            const totalActualPayment = group.rows.reduce((sum, row) => sum + Number(row.actualPayment || row.actualPaid || row.paidAmount || 0), 0);
+
+            return {
+                existingLiability: totals.existingLiability + totalExisting,
+                estimatedLiability: totals.estimatedLiability + totalEstimated,
+                totalEstimatedLiability: totals.totalEstimatedLiability + totalTel,
+                proposedBudget: totals.proposedBudget + totalProposed,
+                balanceLiability: totals.balanceLiability + totalBalance,
+                actualPayment: totals.actualPayment + totalActualPayment
+            };
+        }, { existingLiability: 0, estimatedLiability: 0, totalEstimatedLiability: 0, proposedBudget: 0, balanceLiability: 0, actualPayment: 0 });
+
+        const tableRows = groups.map((group) => {
+            const totalExisting = group.rows.reduce((sum, row) => sum + Number(row.existingLiability || 0), 0);
+            const totalEstimated = group.rows.reduce((sum, row) => sum + Number(row.estimatedLiability || 0), 0);
+            const totalTel = totalExisting + totalEstimated;
+            const totalProposed = group.rows.reduce((sum, row) => sum + Number(row.proposedBudget || row.amountValue || 0), 0);
+            const totalBalance = totalTel - totalProposed;
+            const totalActualPayment = group.rows.reduce((sum, row) => sum + Number(row.actualPayment || row.actualPaid || row.paidAmount || 0), 0);
+
+           return `
+<tr class="component-total-row">
+
+    <td class="center-mono-cell">
+        ${escapeHtml(group.componentItemId)}
+    </td>
+
+    <td class="particulars-name-cell">
+        ${escapeHtml(group.componentName)}
+    </td>
+
+    <td class="amount">
+        <strong>${formatAmount(totalExisting)}</strong>
+    </td>
+
+    <td class="amount">
+        <strong>${formatAmount(totalEstimated)}</strong>
+    </td>
+
+    <td class="amount">
+        <strong>${formatAmount(totalTel)}</strong>
+    </td>
+
+    <td class="amount">
+        <strong>${formatAmount(totalProposed)}</strong>
+    </td>
+
+    <td class="amount">
+        <strong>${formatAmount(totalBalance)}</strong>
+    </td>
+
+    <td class="amount"${approvalHiddenStyle}>
+        <strong>${formatAmount(totalActualPayment)}</strong>
+    </td>
+
+    <td class="amount"${approvalHiddenStyle}>
+        <strong>${formatAmount(totalBalance - totalActualPayment)}</strong>
+    </td>
+
+
+
+</tr>
+`;
+        }).join("");
+
+        const grandTotalRow = `
+                        <tr class="component-total-row grand-summary-bg">
+    <td colspan="2"
+        style="background:#FFD700 !important; color:#000; font-size:16px; font-weight:800; padding:12px 20px;">
+        TOTAL ACCOUNT SUMMARY
+    </td>
+
+    <td class="amount" style="background:#FFD700 !important;"><strong>${formatAmount(grandTotals.existingLiability)}</strong></td>
+    <td class="amount" style="background:#FFD700 !important;"><strong>${formatAmount(grandTotals.estimatedLiability)}</strong></td>
+    <td class="amount" style="background:#FFD700 !important;"><strong>${formatAmount(grandTotals.totalEstimatedLiability)}</strong></td>
+    <td class="amount" style="background:#FFD700 !important;"><strong>${formatAmount(grandTotals.proposedBudget)}</strong></td>
+    <td class="amount" style="background:#FFD700 !important;"><strong>${formatAmount(grandTotals.balanceLiability)}</strong></td>
+    <td class="amount" ${approvalHiddenStyle} style="background:#FFD700 !important;"><strong>${formatAmount(grandTotals.actualPayment)}</strong></td>
+    <td class="amount" ${approvalHiddenStyle} style="background:#FFD700 !important;"><strong>${formatAmount(grandTotals.balanceLiability - grandTotals.actualPayment)}</strong></td>
+</tr>
+        `;
+
+        return `
+            <div class="table-wrapper">
+                <table class="view-data-matrix">
+                    <thead>
+                        <tr>
+                            <th class="sl-no-th">SL. NO</th>
+                            <th>PARTICULARS</th>
+                            <th class="amount-th">EXISTING LIABILITY</th>
+                            <th class="amount-th">ESTIMATED LIABILITY</th>
+                            <th class="amount-th-wide">TOTAL ESTIMATED</th>
+                            <th class="amount-th">${budgetColumnLabel}</th>
+                            <th class="amount-th-wide">BALANCE LIABILITY</th>
+                            <th class="amount-th"${approvalHiddenStyle}>ACTUAL PAYMENT</th>
+                            <th class="amount-th"${approvalHiddenStyle}>NET BALANCE</th>
+                        </tr>
+                    </thead>
+                    <tbody>${tableRows}${grandTotalRow}</tbody>
+                </table>
+            </div>
+        `;
+    }
+
+    let activeView = "abstract";
+    let reportData = null;
+
+    function setActiveView(view){
+        activeView = view;
+        document.querySelectorAll(".view-tab").forEach((button) => {
+            const isActive = button.dataset.view === view;
+            button.classList.toggle("active", isActive);
+            button.setAttribute("aria-selected", String(isActive));
+        });
+        renderCurrentView();
+    }
+function toggleGroup(componentId) {
+
+    const rows = document.querySelectorAll(
+        `.detail-row-${componentId}`
+    );
+
+    const arrow = document.getElementById(
+        `arrow-${componentId}`
+    );
+
+    rows.forEach(row => {
+        row.classList.toggle("hide-row");
+    });
+
+    if (arrow) {
+        arrow.classList.toggle("active");
+    }
+}
+    function renderCurrentView(){
+        const reportArea = document.getElementById("reportArea");
+        if(!reportData){ reportArea.innerHTML = ""; return; }
+        reportArea.innerHTML = activeView === "abstract"
+            ? renderAbstractRows(reportData.rows, reportData.components || [])
+            : renderDetailedRows(reportData.rows, reportData.components || []);
+    }
+
+    function downloadReportExcel(){
+        const dropdown = document.getElementById("reportMonth");
+        if(!dropdown.value){ alert("Please select a month first."); return; }
+        const [year, monthIndex] = dropdown.value.split("|");
+        window.location.href = `${API_BASE}/api/reports/download?year=${year}&monthIndex=${monthIndex}`;
+    }
+
+    async function loadMonths(){
+        const dropdown = document.getElementById("reportMonth");
+        const statusText = document.getElementById("statusText");
+
+        try{
+            const response = await fetch(`${API_BASE}/api/reports/months`);
+            if(!response.ok){
+                const error = await response.json();
+                throw new Error(error.error || "Unable to load report months.");
+            }
+            const months = await response.json();
+
+            if(months.length === 0){
+                dropdown.innerHTML = '<option value="">No months available</option>';
+                statusText.innerText = "No data has been saved yet.";
+                return;
+            }
+
+            dropdown.innerHTML = '<option value="">Select Month</option>';
+            months.forEach((month) => {
+                const option = document.createElement("option");
+                option.value = `${month.year}|${month.monthIndex}`;
+                option.text = `${month.monthName} ${month.year}`;
+                dropdown.add(option);
+            });
+
+            dropdown.value = `${months[0].year}|${months[0].monthIndex}`;
+            loadReport();
+        }catch(error){
+            dropdown.innerHTML = '<option value="">API Error</option>';
+            statusText.innerText = error.message;
+            document.getElementById("reportArea").innerHTML = '<div class="empty">Start the backend, then refresh this page.</div>';
+        }
+    }
+
+    async function loadReport(){
+        const dropdown = document.getElementById("reportMonth");
+        const statusText = document.getElementById("statusText");
+        const reportArea = document.getElementById("reportArea");
+        const periodLabel = document.getElementById("periodLabel");
+
+        if(!dropdown.value){
+            reportData = null;
+            periodLabel.innerText = "Select Month";
+            reportArea.innerHTML = "";
+            return;
+        }
+
+        const [year, monthIndex] = dropdown.value.split("|");
+
+        try{
+            const response = await fetch(`${API_BASE}/api/reports?year=${year}&monthIndex=${monthIndex}`);
+            if(!response.ok){
+                const error = await response.json();
+                throw new Error(error.error || "Unable to load report.");
+            }
+
+            const result = await response.json();
+            const stats = getComponentStats(result.rows, result.components || []);
+            reportData = {
+                rows: result.rows || [],
+                components: result.components || [],
+                budgetApproved: Boolean(result.budgetApproved)
+            };
+            periodLabel.innerText = `${result.monthName} ${result.year}`;
+            statusText.innerText = `[${stats.subComponentCount} Report Records ]`;
+            renderCurrentView();
+        }catch(error){
+            reportData = null;
+            periodLabel.innerText = "API Error";
+            statusText.innerText = error.message;
+            reportArea.innerHTML = '<div class="empty">Unable to load this report.</div>';
+        }
+    }
+
+    document.getElementById("reportMonth").addEventListener("change", loadReport);
+    document.querySelectorAll(".view-tab").forEach((button) => {
+        button.addEventListener("click", () => setActiveView(button.dataset.view));
+    });
+    setActiveView(activeView);
+    loadMonths();
+    </script>
+    
+
+    <script>
+    function updateTime(){
+        const now = new Date();
+        let h = String(now.getHours()).padStart(2,'0');
+        let m = String(now.getMinutes()).padStart(2,'0');
+        let s = String(now.getSeconds()).padStart(2,'0');
+        const timeElem = document.getElementById("time");
+        const dateElem = document.getElementById("todayDate");
+        if(timeElem) timeElem.innerText = `${h}:${m}:${s}`;
+        if(dateElem) dateElem.innerText = now.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}).toUpperCase();
+    }
+    setInterval(updateTime,1000);
+    updateTime();
+    </script>
+    
+
+    <script>
+    (function(){
+        const auth = JSON.parse(localStorage.getItem("financeAuth") || "null");
+        if(!auth || !auth.username || !auth.role){ window.location.replace("login.html"); return; }
+        if(auth.role === "Account Team"){ window.location.replace("viewdata.html"); return; }
+        const label = document.getElementById("welcomeLabel");
+        if(label){ label.innerText = `Operator: ${auth.role.toUpperCase()}`; }
+        const initialBox = document.getElementById("userInitial");
+        if(initialBox && auth.username) initialBox.innerText = auth.username.charAt(0).toUpperCase();
+    })();
+    </script>
+</body>
+</html>

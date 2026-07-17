@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&family=JetBrains+Mono:wght=400;500;600&family=Inter:wght=300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style/viewdata.css">
+    <link rel="stylesheet" href="./style/sidebar.css">
+    <style>
+    .embedded .sidebar,
+    .embedded .top-bar,
+    .embedded .back-link-btn,
+    .embedded .breadcrumb,
+    .embedded .breadcrumb-container,
+    .embedded .sys-footer {
+        display: none !important;
+    }
+    .embedded .wrapper {
+        margin-left: 0 !important;
+    }
+    .embedded .content-area {
+        padding-top: 0 !important;
+    }
+    .embedded html,
+    .embedded body {
+        overflow-x: hidden !important;
+        overflow-y: scroll !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+        background: transparent !important;
+    }
+    .embedded body::-webkit-scrollbar {
+        width: 0px !important;
+        background: transparent !important;
+    }
+    .embedded body::-webkit-scrollbar-track {
+        background: transparent !important;
+    }
+    .embedded body::-webkit-scrollbar-thumb {
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+    .embedded *::-webkit-scrollbar {
+        width: 0px !important;
+        background: transparent !important;
+    }
+    .embedded *::-webkit-scrollbar-thumb {
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+    .embedded body { scrollbar-color: transparent transparent !important; }
+    </style>
+    <script>
+      if (window.self !== window.top) {
+        document.documentElement.classList.add('embedded');
+      }
+    </script>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-glass">
+                <img src="./Image/logo.png" alt="EMC Logo" class="sidebar-logo-img">
+            </div>
+            <h1 class="sidebar-logo-title">Budget Management</h1>
+            <p class="sidebar-logo-subtitle">Internal Finance Platform</p>
+        </div>
+        <div class="nav-links">
+            <a href="finance.html" class="nav-item">
+                <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span> Dashboard Core
+            </a>
+            <a href="datamanagement.html" class="nav-item active">
+                <span class="nav-icon"><i class="fa-solid fa-wallet"></i></span> Finance Hub
+            </a>
+            <div class="nav-sub-links">
+                <a href="masterdata.html" class="nav-sub-item">Create Master Data</a>
+                <a href="viewdata.html" class="nav-sub-item active">View Data</a>
+                <a href="reports.html" class="nav-sub-item">Report Generation</a>
+                <a href="usermanagement.html" class="nav-sub-item">User Management</a>
+            </div>
+            <a href="#" class="nav-item">
+                <span class="nav-icon"><i class="fa-solid fa-gear"></i></span> System Settings
+            </a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="user-profile-section">
+                <div class="user-avatar" id="sidebarAvatar">U</div>
+                <div class="user-meta">
+                    <span class="user-name" id="sidebarUserName">Loading...</span>
+                    <span class="user-role-label" id="sidebarUserRole">Operator</span>
+                </div>
+            </div>
+            <button class="logout-btn" id="sidebarLogoutBtn">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Sign Out</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="wrapper">
+        
+        <header class="top-bar">
+            <div class="breadcrumb">
+                <span class="bc-muted">Workspace /</span> 
+                <strong class="bc-active">Ledger View Matrix</strong>
+            </div>
+            
+            <div class="user-profile">
+                <div class="profile-info">
+                    <h2 id="welcomeLabel">Authentication Required</h2>
+                    <div class="secure-session-indicator">
+                        <span class="pulse-dot"></span>
+                        <span class="profile-status">Secure Tunnel 01</span>
+                    </div>
+                </div>
+                <div class="avatar" id="userInitial">AD</div>
+            </div>
+        </header>
+
+        <div class="content-area">
+            
+            <div style="margin-bottom: 15px;">
+                <a href="datamanagement.html" class="back-link-btn">Back to Data Management</a>
+            </div>
+
+            <div class="section-title-block">
+                <h2>View Data</h2>
+                <button type="button" id="dataLogsLink" class="data-logs-link" onclick="openDataLogsModal()">Data Logs</button>
+            </div>
+
+            <div class="container-grid">
+                <div class="form-column">
+
+                    <div id="userManagementSection" style="display: none; margin-bottom: 40px;">
+                        
+                        <div class="form-card" style="margin-bottom: 30px; max-width: 100%;">
+                            <div class="secure-box-header" style="margin-bottom: 30px;">
+                                <span style="font-size: 1.1rem;">Administrative Control: Create New User</span>
+                                <span class="badge-tag">SECURE_NODE // AUTH</span>
+                            </div>
+                            
+                            <form id="createUserForm" onsubmit="handleCreateUser(event)">
+                                <div class="row row-inline">
+                                    <label class="field-label">Username</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" id="newUsername" required class="input-field">
+                                    </div>
+                                </div>
+                                
+                                <div class="row row-inline">
+                                    <label class="field-label">Password</label>
+                                    <div class="input-wrapper pass-field-container">
+                                        <input type="password" id="newPassword" required class="input-field">
+                                    </div>
+                                </div>
+                                
+                                <div class="row row-inline">
+                                    <label class="field-label">System Role</label>
+                                    <div class="input-wrapper">
+                                        <select id="newRole" class="select-field">
+                                            <option value="Account Team">Account Team</option>
+                                            <option value="Admin">Admin</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="action-bar-strip" style="text-align: right; margin-top: 20px;">
+                                    <button type="submit" class="btn-submit">Provision User</button>
+                                </div>
+                            </form>
+                            <div id="formStatus" class="error-strip"></div>
+                        </div>
+
+                        <div class="box">
+                            <div class="box-header-static">
+                                <div class="header-title-flex">
+                                    <span>System Registry: Existing Consoles</span>
+                                    <span class="role-pill" id="usersStatus">Loading...</span>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div class="table-wrapper">
+                                    <table class="view-data-matrix">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 80px;">ID</th>
+                                                <th>Username</th>
+                                                <th>System Role</th>
+                                                <th style="width: 120px; text-align: center;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="usersTableBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-header-static">
+                            <div class="header-title-flex">
+                                <span>Current Month </span>
+                                <span class="role-pill" id="periodLabel">Loading...</span>
+                            </div>
+                            <div class="box-header-actions">
+                                <span class="badge-tag lock-status-badge" id="editLockBadge">
+                                    <span class="lock-text"></span> LOCKED
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="box-body">
+  <div class="view-ops-bar">
+    <div id="statusContainer" class="import-status muted-status" style="display:block;">
+        Status Engine:
+        <span id="statusText" class="executing-status">
+            Loading current month data...
+        </span>
+    </div>
+
+    <button class="btn btn-success-action" onclick="downloadCurrentMonthExcel()">
+        Download Excel File
+    </button>
+</div>
+                            <div id="dataArea"></div>
+
+                 <div id="financeActionBar" class="action-bar-strip">
+
+    <button
+        id="approveBtn"
+        class="btn btn-success"
+        onclick="approveFinanceData()">
+
+         Approve
+
+    </button>
+
+    <button
+        id="rejectBtn"
+        class="btn btn-danger"
+        onclick="openRejectPopup()">
+
+        Reject
+
+    </button>
+
+    <button
+        id="submitBtn"
+        class="btn btn-primary-action"
+        onclick="openSubmissionPreview()">
+
+        Deploy and Submit Changes
+
+    </button>
+
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+          <footer class="sys-footer">
+            <div class="footer-segment">
+                <span class="footer-indicator"></span>
+                <span>Budget Management System</span>
+            </div>
+            <div class="footer-node">
+                <span id="time">--:--:--</span>
+                <span style="color: #b0c4de; margin-left: 10px;">IN NODE 01</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+    (function(){
+        const auth = JSON.parse(localStorage.getItem("financeAuth") || "null");
+        if(!auth || !auth.role) return;
+        // Also hide any admin-only sections inside this page
+        const userManagementSection = document.getElementById("userManagementSection");
+        if(userManagementSection && auth.role !== "Finance Admin"){
+            userManagementSection.style.display = "none";
+        }
+    })();
+
+  const API_BASE = "http://localhost:5050";
+    let isEditLocked = true;
+let autoLockTimer = null;
+let deletedSubComponentIds = [];
+let currentPaymentRowId = null;
+let currentBudgetApproved = false;
+let originalRowSnapshot = new Map();
+let appModalResolver = null;
+const AUTO_LOCK_TIME = 5 * 60 * 1000; // 5 Minutes
+const ICON_PLUS = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
+const ICON_TRASH = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M9 10v8M15 10v8M6 6l1 15h10l1-15"/></svg>';
+const ICON_CHEVRON_DOWN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+const ICON_INFO = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10v7M12 7h.01"/></svg>';
+
+    function iconButtonHtml(className, label, onclick, iconSvg){
+        return `<button type="button" class="${className}" aria-label="${escapeHtml(label)}" title="${escapeHtml(label)}" onclick="${onclick}">${iconSvg}</button>`;
+    }
+
+    function addRowButtonHtml(extraClass = ""){
+        if(!canAddSubComponents()) return "";
+        return iconButtonHtml(`row-insert-btn ${extraClass}`.trim(), "Add row", "insertRow(this)", ICON_PLUS);
+    }
+
+    function componentAddButtonHtml(){
+        if(!canAddSubComponents()) return "";
+        return iconButtonHtml("row-insert-btn component-add-btn", "Add sub-component", "insertSubComponentForGroup(this)", ICON_PLUS);
+    }
+
+    function canAddSubComponents(){
+        const role = getCurrentRole();
+        return role === "Finance Admin" || role === "Admin(CEO)";
+    }
+
+    function serialCellHtml(serialNumber){
+        return `<span class="serial-cell-content"><span class="serial-number">${escapeHtml(serialNumber)}</span>${addRowButtonHtml()}</span>`;
+    }
+
+    function lastChangeCellHtml(row){
+        const actorText = String(row?.lastModifiedBy || "").trim();
+        const timeText = formatDateTime(row?.lastModifiedAt);
+        const actor = escapeHtml(actorText && actorText !== "-" ? actorText : "No user");
+        const changedAt = escapeHtml(timeText && timeText !== "-" ? timeText : "No date");
+        return `
+            <div class="audit-cell-content">
+                <div>
+                    <strong>${actor}</strong>
+                    <small>${changedAt}</small>
+                </div>
+                ${iconButtonHtml("last-change-info-btn", "View change log", "openLastChangePopup(this)", ICON_INFO)}
+            </div>
+        `;
+    }
+
+    function escapeHtml(value){
+        return String(value || "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    function formatAmount(value){
+        return Number(value || 0).toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function parseAmountInput(value){
+        if(value === null || value === undefined) return 0;
+        const cleaned = String(value).replace(/,/g, "").trim();
+        if(!cleaned) return 0;
+        const parsed = Number(cleaned);
+        return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function formatInputValue(value){
+        const amount = Number(value || 0);
+        return Number.isFinite(amount) ? amount.toFixed(2) : "0.00";
+    }
+
+    function getActorId(){
+        const auth = JSON.parse(localStorage.getItem("financeAuth") || "null");
+        return auth?.username || auth?.employee_id || auth?.role || "Unknown";
+    }
+
+    function formatDateTime(value){
+        if(!value) return "-";
+        const dateString = String(value).trim();
+        const normalized = dateString.replace(" ", "T");
+        const isoString = /([zZ]|[+-]\d{2}:?\d{2})$/.test(normalized) ? normalized : normalized + "Z";
+        const date = new Date(isoString);
+        if(Number.isNaN(date.getTime())) return value;
+        return date.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+    }
+
+    function getCurrentRole(){
+        const auth = JSON.parse(localStorage.getItem("financeAuth") || "null");
+        return auth?.role || "";
+    }
+
+    function openAppModal({ title = "Notice", message = "", primaryText = "OK", secondaryText = "" } = {}){
+        const popup = document.getElementById("appMessagePopup");
+        const titleEl = document.getElementById("appMessageTitle");
+        const bodyEl = document.getElementById("appMessageBody");
+        const primaryBtn = document.getElementById("appMessagePrimary");
+        const secondaryBtn = document.getElementById("appMessageSecondary");
+        if(!popup || !titleEl || !bodyEl || !primaryBtn || !secondaryBtn){
+            window.alert(message || title);
+            return Promise.resolve(false);
+        }
+
+        titleEl.innerText = title;
+        bodyEl.innerText = message;
+        primaryBtn.innerText = primaryText;
+        secondaryBtn.innerText = secondaryText;
+        secondaryBtn.style.display = secondaryText ? "inline-block" : "none";
+        popup.style.display = "flex";
+
+        return new Promise((resolve) => {
+            appModalResolver = resolve;
+        });
+    }
+
+    function resolveAppModal(result){
+        const popup = document.getElementById("appMessagePopup");
+        if(popup) popup.style.display = "none";
+        if(appModalResolver){
+            appModalResolver(result);
+            appModalResolver = null;
+        }
+    }
+
+    function showAppAlert(message, title = "Notice"){
+        return openAppModal({ title, message, primaryText: "OK" });
+    }
+
+    function showAppConfirm(message, title = "Confirm Action"){
+        return openAppModal({ title, message, primaryText: "Yes", secondaryText: "Cancel" });
+    }
+
+    function formatSignedAmount(value){
+        const amount = Number(value) || 0;
+        const prefix = amount > 0 ? "+" : "";
+        return `${prefix}${formatAmount(amount)}`;
+    }
+
+    async function openDataLogsModal(){
+        const role = getCurrentRole();
+        if(role !== "Finance Admin" && role !== "Admin(CEO)") return;
+
+        const popup = document.getElementById("dataLogsPopup");
+        const revisionList = document.getElementById("revisionLogsList");
+        const changeList = document.getElementById("changeRequestLogsList");
+        if(!popup || !revisionList || !changeList) return;
+
+        popup.style.display = "flex";
+        revisionList.innerHTML = '<div class="data-log-empty">Loading revision logs...</div>';
+        changeList.innerHTML = '<div class="data-log-empty">Loading change request logs...</div>';
+
+        try {
+            const response = await fetch(`${API_BASE}/api/view-data/data-logs`);
+            const result = await response.json().catch(()=>({}));
+            if(!response.ok) throw new Error(result.error || "Unable to load data logs.");
+            renderDataLogs(result);
+        } catch(error) {
+            revisionList.innerHTML = `<div class="error-status">${escapeHtml(error.message)}</div>`;
+            changeList.innerHTML = `<div class="error-status">${escapeHtml(error.message)}</div>`;
+        }
+    }
+
+    function closeDataLogsModal(){
+        const popup = document.getElementById("dataLogsPopup");
+        if(popup) popup.style.display = "none";
+    }
+
+    function renderDataLogs({ revisionLogs = [], changeRequestLogs = [] } = {}){
+        const revisionList = document.getElementById("revisionLogsList");
+        const changeList = document.getElementById("changeRequestLogsList");
+        if(!revisionList || !changeList) return;
+
+        revisionList.innerHTML = revisionLogs.length === 0
+            ? '<div class="data-log-empty">No revision logs recorded for this month.</div>'
+            : revisionLogs.map((log) => `
+                <div class="data-log-card">
+                    <div class="data-log-card-head">
+                        <strong>${escapeHtml(log.componentItemId || "-")} - ${escapeHtml(log.componentName || "Component")}</strong>
+                        <span>Revision ${escapeHtml(log.revisionNumber || 1)}</span>
+                    </div>
+                    <p>${escapeHtml(log.reason || "No reason provided.")}</p>
+                    ${Array.isArray(log.changeDetails) && log.changeDetails.length > 0 ? `
+                        <div class="revision-change-list">
+                            ${log.changeDetails.map((detail) => `
+                                <div class="revision-change-line">
+                                    <span>${escapeHtml(detail.itemId || "-")} - ${escapeHtml(detail.subComponentName || "Sub-component")}</span>
+                                    <strong>${escapeHtml(detail.fieldLabel || "Field")}: ${escapeHtml(detail.previousValue || "-")} -> ${escapeHtml(detail.newValue || "-")}</strong>
+                                </div>
+                            `).join("")}
+                        </div>
+                    ` : '<div class="data-log-empty revision-empty">No edited-field details were captured for this revision.</div>'}
+                    <small>${escapeHtml(log.revisedBy || "CEO")} | ${escapeHtml(formatDateTime(log.revisedAt))}</small>
+                </div>
+            `).join("");
+
+        changeList.innerHTML = changeRequestLogs.length === 0
+            ? '<div class="data-log-empty">No amount changes recorded for this month.</div>'
+            : changeRequestLogs.map((log) => `
+                <div class="data-log-card">
+                    <div class="data-log-card-head">
+                        <strong>${escapeHtml(log.itemId || "-")} - ${escapeHtml(log.subComponentName || "Sub-component")}</strong>
+                        <span>${escapeHtml(log.fieldName || "Amount")}</span>
+                    </div>
+                    <div class="data-log-grid">
+                        <span>Previous</span><strong>${formatAmount(log.previousAmount)}</strong>
+                        <span>Changed To</span><strong>${formatAmount(log.newAmount)}</strong>
+                        <span>Difference</span><strong>${formatSignedAmount(log.changeAmount)}</strong>
+                        <span>Exceeded</span><strong class="${Number(log.exceededAmount || 0) > 0 ? "log-danger" : ""}">${formatAmount(log.exceededAmount)}</strong>
+                    </div>
+                    <small>${escapeHtml(log.componentItemId || "-")} - ${escapeHtml(log.componentName || "Component")} | ${escapeHtml(log.changedBy || "Unknown")} | ${escapeHtml(formatDateTime(log.changedAt))}</small>
+                </div>
+            `).join("");
+    }
+
+    function rowSnapshotFromElement(row){
+        const id = row.getAttribute("data-row-id");
+        const componentId = Number(row.getAttribute("data-component-id")) || 0;
+        const itemId = row.querySelector(".serial-number")?.innerText?.trim() || "";
+        const name = row.querySelector('[data-field="name"]')?.value?.trim() || "";
+        const values = getRowValues(row);
+        return { id, componentId, itemId, name, ...values };
+    }
+
+    function captureOriginalSnapshot(){
+        originalRowSnapshot = new Map();
+        document.querySelectorAll("tr[data-row-id]").forEach((row) => {
+            const rowData = rowSnapshotFromElement(row);
+            if(rowData.id) originalRowSnapshot.set(String(rowData.id), rowData);
+        });
+    }
+
+    function collectSubmissionPreviewChanges(){
+        const fieldLabels = {
+            name: "Particulars",
+            existingLiability: "Existing Liability",
+            estimatedLiability: "Estimated Liability",
+            totalEstimatedLiability: "Total Estimated",
+            proposedBudget: currentBudgetApproved ? "Approved Budget" : "Proposed Budget",
+            balanceLiability: "Balance Liability",
+            actualPayment: "Actual Payment",
+            balance: "Net Balance"
+        };
+        const amountFields = new Set([
+            "existingLiability",
+            "estimatedLiability",
+            "totalEstimatedLiability",
+            "proposedBudget",
+            "balanceLiability",
+            "actualPayment",
+            "balance"
+        ]);
+        const changes = [];
+
+        document.querySelectorAll("tr[data-row-id]").forEach((row) => {
+            updateRowCalculations(row);
+            const current = rowSnapshotFromElement(row);
+            const original = originalRowSnapshot.get(String(current.id));
+
+            if(!original || String(current.id).startsWith("new_")){
+                changes.push({
+                    type: "Added",
+                    item: current.itemId || "-",
+                    name: current.name || "New sub-component",
+                    fields: Object.keys(fieldLabels)
+                        .filter((field) => field !== "totalEstimatedLiability" && field !== "balanceLiability" && field !== "balance")
+                        .map((field) => ({ label: fieldLabels[field], from: "-", to: amountFields.has(field) ? formatAmount(current[field]) : current[field] }))
+                });
+                return;
+            }
+
+            const fields = Object.keys(fieldLabels).reduce((list, field) => {
+                const before = original[field];
+                const after = current[field];
+                const changed = amountFields.has(field)
+                    ? Math.abs(Number(before || 0) - Number(after || 0)) > 0.004
+                    : String(before || "") !== String(after || "");
+                if(changed){
+                    list.push({
+                        label: fieldLabels[field],
+                        from: amountFields.has(field) ? formatAmount(before) : before,
+                        to: amountFields.has(field) ? formatAmount(after) : after
+                    });
+                }
+                return list;
+            }, []);
+
+            if(fields.length > 0){
+                changes.push({
+                    type: "Changed",
+                    item: current.itemId || original.itemId || "-",
+                    name: current.name || original.name || "-",
+                    fields
+                });
+            }
+        });
+
+        deletedSubComponentIds.forEach((id) => {
+            const original = originalRowSnapshot.get(String(id));
+            changes.push({
+                type: "Deleted",
+                item: original?.itemId || "-",
+                name: original?.name || `Row ${id}`,
+                fields: []
+            });
+        });
+
+        return changes;
+    }
+
+    function collectSubmittedComponents(){
+        const changedItems = new Set(collectSubmissionPreviewChanges().map((change) => String(change.item || "")));
+        const components = new Map();
+
+        document.querySelectorAll("tr[data-row-id]").forEach((row) => {
+            const snapshot = rowSnapshotFromElement(row);
+            if (!changedItems.has(String(snapshot.itemId || "")) || !snapshot.componentId) return;
+            const summaryRow = document.querySelector(`tr[data-summary-for-component="${snapshot.componentId}"]`);
+            const componentName = summaryRow?.children[1]?.innerText?.trim() || "Component";
+            components.set(snapshot.componentId, { id: snapshot.componentId, name: componentName });
+        });
+
+        deletedSubComponentIds.forEach((id) => {
+            const original = originalRowSnapshot.get(String(id));
+            if (!original?.componentId) return;
+            const summaryRow = document.querySelector(`tr[data-summary-for-component="${original.componentId}"]`);
+            const componentName = summaryRow?.children[1]?.innerText?.trim() || "Component";
+            components.set(original.componentId, { id: original.componentId, name: componentName });
+        });
+
+        return [...components.values()];
+    }
+
+    function collectSubmittedRows(){
+        const changedItems = new Set(collectSubmissionPreviewChanges().map((change) => String(change.item || "")));
+        return Array.from(document.querySelectorAll("tr[data-row-id]"))
+            .map((row) => rowSnapshotFromElement(row))
+            .filter((row) => changedItems.has(String(row.itemId || "")) && /^\d+$/.test(String(row.id || "")) && row.componentId)
+            .map((row) => ({ id: Number(row.id), componentId: row.componentId }));
+    }
+
+    function submissionChangesHtml(changes){
+        return changes.length === 0
+            ? '<div class="submission-empty">No edited content found for preview.</div>'
+            : changes.map((change) => `
+                <div class="submission-change-card">
+                    <div class="submission-change-head">
+                        <span>${escapeHtml(change.type)}</span>
+                        <strong>${escapeHtml(change.item)} - ${escapeHtml(change.name)}</strong>
+                    </div>
+                    ${change.fields.length === 0 ? '<div class="submission-change-line muted-status">This row will be removed.</div>' : change.fields.map((field) => `
+                        <div class="submission-change-line">
+                            <span>${escapeHtml(field.label)}</span>
+                            <strong>${escapeHtml(field.from)} -> ${escapeHtml(field.to)}</strong>
+                        </div>
+                    `).join("")}
+                </div>
+            `).join("");
+    }
+
+    function openSubmissionPreview(){
+        updateSummaryRows();
+        const popup = document.getElementById("submissionPreviewPopup");
+        const list = document.getElementById("submissionPreviewList");
+        const submitBtn = document.getElementById("submissionPreviewSubmit");
+        const changes = collectSubmissionPreviewChanges();
+        if(!popup || !list || !submitBtn) return submitChanges();
+
+        submitBtn.disabled = changes.length === 0;
+        list.innerHTML = submissionChangesHtml(changes);
+        popup.style.display = "flex";
+    }
+
+    function closeSubmissionPreview(){
+        const popup = document.getElementById("submissionPreviewPopup");
+        if(popup) popup.style.display = "none";
+    }
+
+    async function submitFromSubmissionPreview(){
+        closeSubmissionPreview();
+        await submitChanges({ submitForApproval: true });
+    }
+
+    function getRowValues(row){
+        const existing = parseAmountInput(row.querySelector('[data-field="existingLiability"]').value);
+        const estimated = parseAmountInput(row.querySelector('[data-field="estimatedLiability"]').value);
+        const proposed = parseAmountInput(row.querySelector('[data-field="proposedBudget"]').value);
+        const actualPayment = parseAmountInput(row.querySelector('[data-field="actualPayment"]').value);
+        const totalEstimated = existing + estimated;
+        const balanceLiability = totalEstimated - proposed;
+        const balance = balanceLiability - actualPayment;
+
+        return { existingLiability: existing, estimatedLiability: estimated, totalEstimatedLiability: totalEstimated, proposedBudget: proposed, balanceLiability, actualPayment, balance };
+    }
+
+    function updateRowCalculations(row){
+        const values = getRowValues(row);
+        const totalInput = row.querySelector('[data-field="totalEstimatedLiability"]');
+        const balanceInput = row.querySelector('[data-field="balanceLiability"]');
+        const actualPaymentInput = row.querySelector('[data-field="actualPayment"]');
+        const finalBalanceInput = row.querySelector('[data-field="balance"]');
+
+        if(totalInput) totalInput.value = formatInputValue(values.totalEstimatedLiability);
+        if(balanceInput) balanceInput.value = formatInputValue(values.balanceLiability);
+        if(actualPaymentInput) actualPaymentInput.value = formatInputValue(values.actualPayment);
+        if(finalBalanceInput) finalBalanceInput.value = formatInputValue(values.balance);
+    }
+
+    function updateSummaryRows(){
+        const rows = Array.from(document.querySelectorAll("tr[data-row-id]"));
+        const groups = new Map();
+
+        rows.forEach((row) => {
+            const componentId = row.getAttribute("data-component-id") || "__unknown__";
+            if(!groups.has(componentId)){
+                groups.set(componentId, { componentId, existingLiability: 0, estimatedLiability: 0, totalEstimatedLiability: 0, proposedBudget: 0, balanceLiability: 0, actualPayment: 0, balance: 0 });
+            }
+            const values = getRowValues(row);
+            const group = groups.get(componentId);
+            group.existingLiability += values.existingLiability;
+            group.estimatedLiability += values.estimatedLiability;
+            group.totalEstimatedLiability += values.totalEstimatedLiability;
+            group.proposedBudget += values.proposedBudget;
+            group.balanceLiability += values.balanceLiability;
+            group.actualPayment += values.actualPayment;
+            group.balance += values.balance;
+        });
+
+        groups.forEach((group) => {
+            const summaryRow = document.querySelector(`tr[data-summary-for-component="${group.componentId}"]`);
+            if(!summaryRow) return;
+
+            [["existingLiability", group.existingLiability], ["estimatedLiability", group.estimatedLiability], ["totalEstimatedLiability", group.totalEstimatedLiability], ["proposedBudget", group.proposedBudget], ["balanceLiability", group.balanceLiability], ["actualPayment", group.actualPayment], ["balance", group.balance]].forEach(([field, value]) => {
+                const cell = summaryRow.querySelector(`[data-summary-field="${field}"]`);
+                if(cell) cell.innerHTML = `<strong>${formatAmount(value)}</strong>`;
+            });
+        });
+
+        const grandSummaryRow = document.querySelector('tr[data-summary-for-component="__grand__"]');
+        if(grandSummaryRow){
+            const grandTotals = Array.from(groups.values()).reduce((totals, group) => ({
+                existingLiability: totals.existingLiability + group.existingLiability,
+                estimatedLiability: totals.estimatedLiability + group.estimatedLiability,
+                totalEstimatedLiability: totals.totalEstimatedLiability + group.totalEstimatedLiability,
+                proposedBudget: totals.proposedBudget + group.proposedBudget,
+                balanceLiability: totals.balanceLiability + group.balanceLiability,
+                actualPayment: totals.actualPayment + group.actualPayment,
+                balance: totals.balance + group.balance
+            }), { existingLiability: 0, estimatedLiability: 0, totalEstimatedLiability: 0, proposedBudget: 0, balanceLiability: 0, actualPayment: 0, balance: 0 });
+
+            [["existingLiability", grandTotals.existingLiability], ["estimatedLiability", grandTotals.estimatedLiability], ["totalEstimatedLiability", grandTotals.totalEstimatedLiability], ["proposedBudget", grandTotals.proposedBudget], ["balanceLiability", grandTotals.balanceLiability], ["actualPayment", grandTotals.actualPayment], ["balance", grandTotals.balance]].forEach(([field, value]) => {
+                const cell = grandSummaryRow.querySelector(`[data-summary-field="${field}"]`);
+                if(cell) cell.innerHTML = `<strong>${formatAmount(value)}</strong>`;
+            });
+        }
+    }
+
+    function handleRowInput(event){
+        const row = event.target.closest("tr[data-row-id]");
+        if(!row) return;
+        updateRowCalculations(row);
+        updateSummaryRows();
+    }
+
+   function applyRoleRestrictions(){
+
+    const role = getCurrentRole();
+
+    const approveBtn = document.getElementById("approveBtn");
+    const rejectBtn = document.getElementById("rejectBtn");
+    const submitBtn = document.getElementById("submitBtn");
+    const dataLogsLink = document.getElementById("dataLogsLink");
+
+    if (approveBtn) approveBtn.innerText = "Approve";
+    if (rejectBtn) rejectBtn.innerText = currentBudgetApproved ? "Revise" : "Reject";
+    if (submitBtn) submitBtn.innerText = role === "Finance Admin" ? "Submission Preview" : (currentBudgetApproved ? "Approve and Revise" : "Deploy and Submit Changes");
+
+    // Hide all actions before applying role-specific visibility.
+    approveBtn.style.display = "none";
+    rejectBtn.style.display = "none";
+    submitBtn.style.display = "none";
+    if (dataLogsLink) dataLogsLink.style.display = "none";
+
+    if (role === "Admin(CEO)") {
+        approveBtn.style.display = "inline-block";
+        rejectBtn.style.display = "inline-block";
+        if (dataLogsLink) dataLogsLink.style.display = "inline-block";
+    }
+
+    else if (role === "Finance Admin") {
+        submitBtn.style.display = "inline-block";
+        if (dataLogsLink) dataLogsLink.style.display = "inline-block";
+    }
+
+    const isAccountTeam = role === "Account Team";
+
+    const userMgmtLink = document.getElementById("userMgmtSidebarLink");
+    if (userMgmtLink && role === "Admin") {
+        userMgmtLink.style.display = "flex";
+    }
+
+    document.querySelectorAll("tr[data-row-id]").forEach((row) => {
+
+        [
+            "name",
+            "existingLiability",
+            "estimatedLiability",
+            "proposedBudget",
+            "totalEstimatedLiability",
+            "balanceLiability",
+            "balance"
+        ].forEach((field) => {
+
+            const input = row.querySelector(`[data-field="${field}"]`);
+            if (!input) return;
+
+            if (isAccountTeam) {
+                input.disabled = true;
+                input.classList.add("disabled-input");
+            } else {
+                input.disabled = false;
+                input.classList.remove("disabled-input");
+            }
+        });
+
+        const actPay = row.querySelector('[data-field="actualPayment"]');
+        if (actPay) {
+            actPay.disabled = false;
+        }
+    });
+}
+
+    function bindRowCalculations(){
+        document.querySelectorAll("tr[data-row-id]").forEach((row) => {
+            row.querySelectorAll("input[data-field]").forEach((input) => {
+                input.removeEventListener("input", handleRowInput);
+                input.addEventListener("input", handleRowInput);
+            });
+            updateRowCalculations(row);
+        });
+        updateSummaryRows();
+        applyRoleRestrictions();
+    }
+
+    function isHiddenComponentName(name){
+        return String(name || "").trim().toUpperCase() === "TOTAL PAYMENT";
+    }
+
+    function groupRows(rows, components = []){
+        const filteredComponents = components.filter((component) => !isHiddenComponentName(component.componentName));
+        const filteredRows = rows.filter((row) => !isHiddenComponentName(row.componentName || row.name));
+        let groups = [];
+        let byId = new Map();
+
+        filteredComponents.forEach(c => {
+            if(!byId.has(c.componentId)){
+                let g = { componentId: c.componentId, componentItemId: c.componentItemId, componentName: c.componentName, rows: [] };
+                byId.set(c.componentId, g);
+                groups.push(g);
+            }
+        });
+
+        filteredRows.forEach(row=>{
+            if(!byId.has(row.componentId)){
+                let g = { componentId: row.componentId, componentItemId: row.componentItemId, componentName: row.componentName, rows: [] };
+                byId.set(row.componentId, g);
+                groups.push(g);
+            }
+            byId.get(row.componentId).rows.push(row);
+        });
+        return groups;
+    }
+
+    function renderRows(rows, components = []){
+        if(rows.length === 0) return '<div class="empty">No data saved for the current month.</div>';
+        const budgetColumnLabel = currentBudgetApproved ? "APPROVED BUDGET" : "PROPOSED BUDGET";
+        const approvalHiddenStyle = currentBudgetApproved ? "" : ' style="display:none;"';
+
+        let tableRows = groupRows(rows, components).map((group, groupIndex)=>{
+            const displayComponentItemId = String(groupIndex + 1);
+            const totalExisting = group.rows.reduce((sum,row)=>sum + Number(row.existingLiability || 0), 0);
+            const totalEstimated = group.rows.reduce((sum,row)=>sum + Number(row.estimatedLiability || 0), 0);
+            const totalProposed = group.rows.reduce((sum,row)=>sum + Number(row.proposedBudget || row.amountValue || 0), 0);
+            const totalTel = totalExisting + totalEstimated;
+            const totalBl = totalTel - totalProposed;
+            const totalActualPayment = group.rows.reduce((sum,row)=>sum + Number(row.actualPayment || 0), 0);
+            const totalBalance = totalBl - totalActualPayment;
+
+            let subRows = group.rows.map((row, index)=>{
+                const existing = Number(row.existingLiability || 0);
+                const estimated = Number(row.estimatedLiability || 0);
+                const proposed = Number(row.proposedBudget || row.amountValue || 0);
+                const actualPayment = Number(row.actualPayment || 0);
+                const serialNumber = `${displayComponentItemId}.${index + 1}`;
+                return `
+                    <tr data-row-id="${row.id}" data-component-id="${group.componentId}" data-group-id="${group.componentId}" class="hidden-rows">
+                        <td class="center-mono-cell">${serialCellHtml(serialNumber)}</td>
+                        <td class="particulars-name-cell"><input class="editable-cell text-name" type="text" data-field="name" value="${escapeHtml(row.name)}"></td>
+                        <td><input class="editable-cell text-amount" type="number" step="0.01" data-field="existingLiability" value="${escapeHtml(formatInputValue(existing))}"></td>
+                        <td><input class="editable-cell text-amount" type="number" step="0.01" data-field="estimatedLiability" value="${escapeHtml(formatInputValue(estimated))}"></td>
+                        <td><input class="editable-cell derived-cell text-amount" type="number" step="0.01" data-field="totalEstimatedLiability" value="${escapeHtml(formatInputValue(existing+estimated))}" readonly></td>
+                        <td><input class="editable-cell text-amount" type="number" step="0.01" data-field="proposedBudget" value="${escapeHtml(formatInputValue(proposed))}"></td>
+                        <td><input class="editable-cell derived-cell text-amount" type="number" step="0.01" data-field="balanceLiability" value="${escapeHtml(formatInputValue(existing+estimated-proposed))}" readonly></td>
+                        <td${approvalHiddenStyle}>
+                            <button type="button" class="actual-payment-link" onclick="openActualPaymentPopup(this)">
+                                ${formatAmount(actualPayment)}
+                            </button>
+                            <input type="hidden" data-field="actualPayment" value="${escapeHtml(formatInputValue(actualPayment))}">
+                        </td>
+                        <td${approvalHiddenStyle}><input class="editable-cell derived-cell text-amount" type="number" step="0.01" data-field="balance" value="${escapeHtml(formatInputValue(existing+estimated-proposed-actualPayment))}" readonly></td>
+                        <td class="audit-cell">${lastChangeCellHtml(row)}</td>
+                        <td class="delete-cell">
+    ${iconButtonHtml("row-delete-btn", "Delete row", "deleteRow(this)", ICON_TRASH)}
+</td>
+<td></td>
+                    </tr>
+                `;
+            }).join("");
+
+            return `
+    <tr class="component-total-row"
+    data-summary-for-component="${group.componentId}"
+    data-component-item-id="${escapeHtml(displayComponentItemId)}">
+
+    <td><span class="serial-cell-content"><span class="serial-number">${escapeHtml(displayComponentItemId)}</span>${componentAddButtonHtml()}</span></td>
+
+    <td>${escapeHtml(group.componentName)}</td>
+
+    <td data-summary-field="existingLiability">
+        <strong>${formatAmount(totalExisting)}</strong>
+    </td>
+
+    <td data-summary-field="estimatedLiability">
+        <strong>${formatAmount(totalEstimated)}</strong>
+    </td>
+
+    <td data-summary-field="totalEstimatedLiability">
+        <strong>${formatAmount(totalTel)}</strong>
+    </td>
+
+    <td data-summary-field="proposedBudget">
+        <strong>${formatAmount(totalProposed)}</strong>
+    </td>
+
+    <td data-summary-field="balanceLiability">
+        <strong>${formatAmount(totalBl)}</strong>
+    </td>
+
+    <td data-summary-field="actualPayment"${approvalHiddenStyle}>
+        <strong>${formatAmount(totalActualPayment)}</strong>
+    </td>
+
+    <td data-summary-field="balance"${approvalHiddenStyle}>
+        <strong>${formatAmount(totalBalance)}</strong>
+    </td>
+<td class="component-spacer-cell"></td>
+<td class="component-spacer-cell"></td>
+    <td class="toggle-column">
+        <button
+            type="button"
+            class="group-toggle-btn"
+            id="arrow-${group.componentId}"
+            aria-label="Show or hide rows"
+            title="Show or hide rows"
+            onclick="toggleGroup('${group.componentId}')"
+        >
+            ${ICON_CHEVRON_DOWN}
+        </button>
+    </td>
+
+</tr>                
+${subRows}
+            `;
+        }).join("");
+
+let grandTotalRow = `
+    <tr class="component-total-row grand-summary-bg"
+        data-summary-for-component="__grand__"
+        style="background:#000; color:#fff; font-weight:bold;">
+        <td colspan="2"
+    class="grand-summary-label"
+    style="background:#000; color:#fff; font-size:16px; font-weight:800; padding:12px 20px;">
+    TOTAL ACCOUNT SUMMARY
+</td>
+
+        <td class="text-amount" data-summary-field="existingLiability" style="background:#000; color:#fff;"><strong>0.00</strong></td>
+        <td class="text-amount" data-summary-field="estimatedLiability" style="background:#000; color:#fff;"><strong>0.00</strong></td>
+        <td class="text-amount" data-summary-field="totalEstimatedLiability" style="background:#000; color:#fff;"><strong>0.00</strong></td>
+        <td class="text-amount" data-summary-field="proposedBudget" style="background:#000; color:#fff;"><strong>0.00</strong></td>
+        <td class="text-amount" data-summary-field="balanceLiability" style="background:#000; color:#fff;"><strong>0.00</strong></td>
+        <td class="text-amount" data-summary-field="actualPayment" ${approvalHiddenStyle} style="background:#000; color:#fff;"><strong>0.00</strong></td>
+        <td class="text-amount" data-summary-field="balance" ${approvalHiddenStyle} style="background:#000; color:#fff;"><strong>0.00</strong></td>
+        <td style="background:#000;"></td>
+        <td style="background:#000;"></td>
+        <td style="background:#000;"></td>
+    </tr>
+`;
+        return `
+            <div class="table-wrapper">
+                <table class="view-data-matrix">
+                    <thead>
+                        <tr>
+                            <th class="sl-no-th">SL. NO</th>
+                            <th>PARTICULARS</th>
+                            <th class="amount-th">EXISTING LIABILITY</th>
+                            <th class="amount-th">ESTIMATED LIABILITY</th>
+                            <th class="amount-th-wide">TOTAL ESTIMATED</th>
+                            <th class="amount-th">${budgetColumnLabel}</th>
+                            <th class="amount-th-wide">BALANCE LIABILITY</th>
+                            <th class="amount-th"${approvalHiddenStyle}>ACTUAL PAYMENT</th>
+                            <th class="amount-th"${approvalHiddenStyle}>NET BALANCE</th>
+                            <th class="amount-th">LAST CHANGE</th>
+                            <th class="amount-th action-header">ACTION</th>
+                            <th class="amount-th"></th>
+                        </tr>
+                    </thead>
+                    <tbody>${tableRows}${grandTotalRow}</tbody>
+                </table>
+            </div>
+        `;
+    }
+
+    async function submitChanges(options = {}){
+        const allowNoChanges = Boolean(options.allowNoChanges);
+        const reloadAfterSave = options.reloadAfterSave !== false;
+        let statusText = document.getElementById("statusText");
+        let statusContainer = document.getElementById("statusContainer");
+        const auth = JSON.parse(localStorage.getItem("financeAuth") || "null");
+        const role = auth?.role || "";
+        
+        if(statusContainer) statusContainer.style.display = "block";
+        statusText.className = "executing-status";
+        statusText.innerText = "Processing transactional commit pipeline...";
+
+        let updates = Array.from(document.querySelectorAll("tr[data-row-id]")).map((row)=>({
+            id: row.getAttribute("data-row-id"),
+            componentId: Number(row.getAttribute("data-component-id")),
+            itemId: row.querySelector(".serial-number")?.innerText?.trim() || "",
+            name: row.querySelector('[data-field="name"]')?.value?.trim() || "",
+            existingLiability: parseAmountInput(row.querySelector('[data-field="existingLiability"]').value),
+            estimatedLiability: parseAmountInput(row.querySelector('[data-field="estimatedLiability"]').value),
+            totalEstimatedLiability: parseAmountInput(row.querySelector('[data-field="totalEstimatedLiability"]').value),
+            proposedBudget: parseAmountInput(row.querySelector('[data-field="proposedBudget"]').value),
+            balanceLiability: parseAmountInput(row.querySelector('[data-field="balanceLiability"]').value),
+            actualPayment: parseAmountInput(row.querySelector('[data-field="actualPayment"]').value)
+        })).filter((row)=>row.id && row.name);
+
+        if(role === "Account Team") updates = updates.map(({ id, actualPayment }) => ({ id, actualPayment }));
+        if(updates.length === 0 && deletedSubComponentIds.length === 0) {
+            if (allowNoChanges) {
+                return true;
+            }
+            statusText.className = "error-status";
+            statusText.innerText = "No rows to save.";
+            return false;
+        }
+
+        try{
+            let response = await fetch(`${API_BASE}/api/view-data/current-month`, {
+                method: "PATCH",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ role, modifiedBy: getActorId(), updates, deleteIds: deletedSubComponentIds, submitForApproval: Boolean(options.submitForApproval), submittedComponents: options.submitForApproval ? collectSubmittedComponents() : [], submittedRows: options.submitForApproval ? collectSubmittedRows() : [] })
+            });
+            let result = await response.json().catch(()=>({}));
+            if(!response.ok) throw new Error(result.error || "Unable to save changes.");
+            statusText.className = "success-status";
+            statusText.innerText = result.message || `Saved changes successfully.`;
+            deletedSubComponentIds = [];
+            if (reloadAfterSave) {
+                await loadCurrentMonthData();
+            }
+            return true;
+        }catch(error){
+            statusText.className = "error-status";
+            statusText.innerText = error.message;
+            return false;
+        }
+    }
+// =======================
+// APPROVE DATA
+// =======================
+
+async function approveFinanceData() {
+    const confirmed = await showAppConfirm("Are you sure you want to approve this month's finance data?", "Approve Finance Data");
+    if (!confirmed) return;
+
+    const statusText = document.getElementById("statusText");
+
+    try {
+        statusText.className = "executing-status";
+        statusText.innerText = "Approving finance data...";
+
+        const response = await fetch(
+            `${API_BASE}/api/approval/approve`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) throw new Error(result.error || "Approval failed.");
+
+        statusText.className = "success-status";
+        statusText.innerText = result.message;
+
+        await loadCurrentMonthData();
+        await showAppAlert("You have approved the budget for the month.", "Budget Approved");
+
+    } catch (err) {
+        statusText.className = "error-status";
+        statusText.innerText = err.message;
+    }
+}
+// =======================
+// OPEN REJECT POPUP
+// =======================
+
+function openRejectPopup() {
+
+    document.getElementById("rejectPopup").style.display = "flex";
+
+    document.getElementById("rejectReason").value = "";
+    const rejectTitle = document.getElementById("rejectPopupTitle");
+    const rejectPrompt = document.getElementById("rejectReason");
+    const rejectPreview = document.getElementById("rejectPreviewList");
+    const rejectPreviewWrap = document.getElementById("rejectPreviewWrap");
+    if (rejectTitle) rejectTitle.innerText = currentBudgetApproved ? "Revise Finance Data" : "Revised Finance Data";
+    if (rejectPrompt) rejectPrompt.placeholder = currentBudgetApproved ? "Enter revision reason..." : "Enter rejection reason...";
+    if (rejectPreview && rejectPreviewWrap) {
+        const changes = collectSubmissionPreviewChanges();
+        rejectPreview.innerHTML = submissionChangesHtml(changes);
+        rejectPreviewWrap.style.display = currentBudgetApproved ? "block" : "none";
+    }
+
+}
+
+// =======================
+// CLOSE POPUP
+// =======================
+
+function closeRejectPopup() {
+
+    document.getElementById("rejectPopup").style.display = "none";
+
+}
+// =======================
+// REJECT DATA
+// =======================
+
+async function submitReject() {
+
+    const reason = document.getElementById("rejectReason").value.trim();
+    const revisionChanges = currentBudgetApproved ? collectSubmissionPreviewChanges() : [];
+
+    if (!reason) {
+        await showAppAlert("Please enter rejection reason.", "Revision Reason Required");
+        return;
+    }
+
+    const statusText = document.getElementById("statusText");
+
+    try {
+        statusText.className = "executing-status";
+        statusText.innerText = currentBudgetApproved ? "Saving CEO changes before revision..." : "Rejecting finance data...";
+
+        if (currentBudgetApproved) {
+            const saved = await submitChanges({ allowNoChanges: true, reloadAfterSave: false });
+            if (!saved) return;
+        }
+
+        statusText.className = "executing-status";
+        statusText.innerText = currentBudgetApproved ? "Sending finance data for revision..." : "Rejecting finance data...";
+
+        const response = await fetch(
+            `${API_BASE}/api/approval/reject`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    remarks: reason,
+                    changes: revisionChanges
+                })
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) throw new Error(result.error || "Reject failed.");
+
+        statusText.className = "success-status";
+        statusText.innerText = result.message;
+
+        closeRejectPopup();
+        await loadCurrentMonthData();
+
+    } catch (err) {
+        statusText.className = "error-status";
+        statusText.innerText = err.message;
+    }
+}
+async function openActualPaymentPopup(btn) {
+    if (!currentBudgetApproved) {
+        await showAppAlert("Actual payment is available only after CEO approval.", "Actual Payment Locked");
+        return;
+    }
+
+    if (isEditLocked) {
+        await showAppAlert("Unlock editing before changing actual payment.", "Editing Locked");
+        return;
+    }
+
+    const row = btn.closest("tr[data-row-id]");
+    if (!row) return;
+
+    const rowId = row.getAttribute("data-row-id");
+    if (!rowId || rowId.startsWith("new_")) {
+        await showAppAlert("Please save the new sub-component before editing actual payment.", "Save Required");
+        return;
+    }
+
+    currentPaymentRowId = rowId;
+    const currentAmount = parseAmountInput(row.querySelector('[data-field="actualPayment"]').value);
+    document.getElementById("paymentCurrentAmount").innerText = formatAmount(currentAmount);
+    document.getElementById("paymentAmount").value = "";
+    document.getElementById("paymentAction").value = "add";
+    const now = new Date();
+    document.getElementById("paymentDate").value = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    document.getElementById("paymentDateDetails").open = false;
+    document.getElementById("actualPaymentPopup").style.display = "flex";
+}
+
+function closeActualPaymentPopup() {
+    document.getElementById("actualPaymentPopup").style.display = "none";
+    currentPaymentRowId = null;
+}
+
+async function openLastChangePopup(btn) {
+    const row = btn.closest("tr[data-row-id]");
+    if(!row) return;
+
+    const rowId = row.getAttribute("data-row-id");
+    document.getElementById("lastChangePopup").style.display = "flex";
+
+    if(!rowId || rowId.startsWith("new_")) {
+        const list = document.getElementById("changeHistoryList");
+        list.innerHTML = '<div class="muted-status">Save this row before viewing its change log.</div>';
+        return;
+    }
+
+    await loadActualPaymentHistory(rowId, "changeHistoryList");
+}
+
+function closeLastChangePopup() {
+    document.getElementById("lastChangePopup").style.display = "none";
+}
+
+async function loadActualPaymentHistory(rowId, targetId = "changeHistoryList") {
+    const list = document.getElementById(targetId);
+    if(!list) return;
+    list.innerHTML = '<div class="muted-status">Loading change log...</div>';
+
+    try {
+        const response = await fetch(`${API_BASE}/api/view-data/${rowId}/actual-payment-history`);
+        const result = await response.json();
+        if(!response.ok) throw new Error(result.error || "Unable to load history.");
+
+        if(!result.history || result.history.length === 0) {
+            list.innerHTML = '<div class="muted-status">No payment changes recorded yet.</div>';
+            return;
+        }
+
+        list.innerHTML = result.history.map(item => `
+            <div class="payment-history-item">
+                <strong>${escapeHtml(item.changedBy || "No user")}</strong>
+                <span>Payment date: ${escapeHtml(formatPaymentDate(item.paymentDate))}</span>
+                <span>${escapeHtml(formatDateTime(item.changedAt))}</span>
+                <small>${escapeHtml(item.actionType || "update").toUpperCase()} ${formatAmount(item.adjustmentAmount)}. Total: ${formatAmount(item.newAmount)}</small>
+            </div>
+        `).join("");
+    } catch(error) {
+        list.innerHTML = `<div class="error-status">${escapeHtml(error.message)}</div>`;
+    }
+}
+
+async function saveActualPaymentAdjustment() {
+    if(!currentPaymentRowId) return;
+
+    const amount = parseAmountInput(document.getElementById("paymentAmount").value);
+    const actionType = document.getElementById("paymentAction").value;
+    const paymentDate = document.getElementById("paymentDate").value;
+    const statusText = document.getElementById("statusText");
+
+    if(amount <= 0 && actionType !== "set") {
+        await showAppAlert("Enter an amount greater than zero.", "Invalid Amount");
+        return;
+    }
+    if(!paymentDate) {
+        await showAppAlert("Select the payment date.", "Payment Date Required");
+        return;
+    }
+
+    try {
+        statusText.className = "executing-status";
+        statusText.innerText = "Saving actual payment...";
+
+        const response = await fetch(`${API_BASE}/api/view-data/${currentPaymentRowId}/actual-payment`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ actionType, amount, paymentDate, changedBy: getActorId() })
+        });
+        const result = await response.json();
+        if(!response.ok) throw new Error(result.error || "Unable to update actual payment.");
+
+        statusText.className = "success-status";
+        statusText.innerText = result.message || "Actual payment updated.";
+        closeActualPaymentPopup();
+        await loadCurrentMonthData();
+    } catch(error) {
+        statusText.className = "error-status";
+        statusText.innerText = error.message;
+    }
+}
+
+function formatPaymentDate(value) {
+    if(!value) return "Not recorded";
+    const [year, month, day] = String(value).split("-");
+    return year && month && day ? `${day}/${month}/${year}` : String(value);
+}
+function toggleGroup(componentId){
+
+    const rows = document.querySelectorAll(
+        `tr[data-component-id="${componentId}"]`
+    );
+
+    const actionHeader = document.querySelector(".action-header");
+
+    let isHidden = true;
+
+    rows.forEach(row=>{
+        if(!row.classList.contains("hidden-rows")){
+            isHidden = false;
+        }
+    });
+
+    rows.forEach(row=>{
+        if(isHidden){
+            row.classList.remove("hidden-rows");
+        }else{
+            row.classList.add("hidden-rows");
+        }
+    });
+
+    if(actionHeader){
+        if(isHidden){
+            actionHeader.style.display = "table-cell";
+        }else{
+            actionHeader.style.display = "none";
+        }
+    }
+
+    const arrow = document.getElementById(`arrow-${componentId}`);
+    if(arrow){
+        arrow.classList.toggle("active");
+    }
+}
+function lockEditing() {
+
+    isEditLocked = true;
+
+    document.querySelectorAll(
+        'tr[data-row-id] input[data-field]'
+    ).forEach(input => {
+        input.disabled = true;
+    });
+
+    const badge =
+        document.getElementById("editLockBadge");
+
+    if (badge) {
+        badge.innerHTML = '<span class="lock-icon"></span> LOCKED';
+        badge.classList.remove("unlocked");
+    }
+
+    const statusContainer =
+        document.getElementById("statusContainer");
+
+    const statusText =
+        document.getElementById("statusText");
+
+    if(statusContainer && statusText){
+
+        statusContainer.style.display = "block";
+
+        statusText.className = "error-status";
+
+        statusText.innerText =
+            "Editing Locked";
+    }
+
+    setTimeout(() => {
+        if(statusContainer){
+            statusContainer.style.display = "none";
+        }
+    }, 3000);
+
+    clearTimeout(autoLockTimer);
+}
+
+function unlockEditing() {
+    isEditLocked = false;
+
+    applyRoleRestrictions();
+
+    const badge = document.getElementById("editLockBadge");
+
+    if (badge) {
+        badge.innerHTML = '<span class="lock-icon"></span> UNLOCKED';
+        badge.classList.add("unlocked");
+    }
+
+    resetAutoLockTimer();
+}
+
+function resetAutoLockTimer() {
+    clearTimeout(autoLockTimer);
+
+    autoLockTimer = setTimeout(() => {
+
+        lockEditing();
+
+        const statusText =
+            document.getElementById("statusText");
+
+        if(statusText){
+            statusText.className = "error-status";
+            statusText.innerText =
+                "System automatically locked after 5 minutes of inactivity.";
+        }
+
+    }, AUTO_LOCK_TIME);
+}
+
+function toggleEditLock() {
+    if (isEditLocked) {
+        unlockEditing();
+    } else {
+        lockEditing();
+    }
+}
+async function deleteRow(btn){
+
+    const row = btn.closest("tr");
+
+    const confirmed = await showAppConfirm("Delete this row?", "Delete Row");
+    if(!confirmed){
+        return;
+    }
+
+    const rowId = Number(row.getAttribute("data-row-id"));
+    if (rowId && !Number.isNaN(rowId)) {
+        deletedSubComponentIds.push(rowId);
+    }
+
+    const componentId =
+        row.getAttribute("data-component-id");
+
+    row.remove();
+
+    updateSerialNumbers(componentId);
+
+    updateSummaryRows();
+}
+function insertRow(btn){
+    if(!canAddSubComponents()) return;
+
+    const currentRow = btn.closest("tr");
+
+    const componentId =
+        currentRow.getAttribute("data-component-id");
+
+    const newRow = currentRow.cloneNode(true);
+
+    newRow.setAttribute(
+        "data-row-id",
+        "new_" + Date.now()
+    );
+
+    newRow.querySelectorAll("input").forEach(input=>{
+
+        if(
+            input.dataset.field === "name"
+        ){
+            input.value = "";
+        }else if(
+            input.dataset.field === "totalEstimatedLiability" ||
+            input.dataset.field === "balanceLiability" ||
+            input.dataset.field === "balance" ||
+            input.dataset.field === "actualPayment"
+        ){
+            input.value = "0.00";
+        }else{
+            input.value = "";
+        }
+
+    });
+
+    const paymentLink = newRow.querySelector(".actual-payment-link");
+    if(paymentLink) paymentLink.innerText = "0.00";
+    const auditCell = newRow.querySelector(".audit-cell");
+    if(auditCell) auditCell.innerHTML = lastChangeCellHtml({ lastModifiedBy: "", lastModifiedAt: "" });
+
+    currentRow.insertAdjacentElement(
+        "afterend",
+        newRow
+    );
+
+    newRow.querySelectorAll("input[data-field]")
+    .forEach(input=>{
+        input.addEventListener(
+            "input",
+            handleRowInput
+        );
+    });
+
+    updateSerialNumbers(componentId);
+
+    updateSummaryRows();
+    if (!isEditLocked) {
+        applyRoleRestrictions();
+    } else {
+        newRow.querySelectorAll("input[data-field]").forEach(input => {
+            input.disabled = true;
+        });
+    }
+}
+function insertSubComponentForGroup(btn){
+    if(!canAddSubComponents()) return;
+    const summaryRow = btn.closest("tr[data-summary-for-component]");
+    if(!summaryRow) return;
+
+    const componentId = summaryRow.getAttribute("data-summary-for-component");
+    const existingRows = document.querySelectorAll(`tr[data-component-id="${componentId}"]`);
+
+    if(existingRows.length > 0){
+        insertRow(existingRows[existingRows.length - 1].querySelector(".row-insert-btn"));
+        const insertedRow = document.querySelectorAll(`tr[data-component-id="${componentId}"]`);
+        insertedRow[insertedRow.length - 1]?.classList.remove("hidden-rows");
+        return;
+    }
+
+    const componentItemId = summaryRow.getAttribute("data-component-item-id") || "";
+    const approvalHiddenStyle = currentBudgetApproved ? "" : ' style="display:none;"';
+    const newRow = document.createElement("tr");
+    newRow.setAttribute("data-row-id", "new_" + Date.now());
+    newRow.setAttribute("data-component-id", componentId);
+    newRow.setAttribute("data-group-id", componentId);
+    newRow.innerHTML = `
+        <td class="center-mono-cell">${serialCellHtml(`${componentItemId}.1`)}</td>
+        <td class="particulars-name-cell"><input class="editable-cell text-name" type="text" data-field="name" value=""></td>
+        <td><input class="editable-cell text-amount" type="number" step="0.01" data-field="existingLiability" value="0.00"></td>
+        <td><input class="editable-cell text-amount" type="number" step="0.01" data-field="estimatedLiability" value="0.00"></td>
+        <td><input class="editable-cell derived-cell text-amount" type="number" step="0.01" data-field="totalEstimatedLiability" value="0.00" readonly></td>
+        <td><input class="editable-cell text-amount" type="number" step="0.01" data-field="proposedBudget" value="0.00"></td>
+        <td><input class="editable-cell derived-cell text-amount" type="number" step="0.01" data-field="balanceLiability" value="0.00" readonly></td>
+        <td${approvalHiddenStyle}><button type="button" class="actual-payment-link" onclick="openActualPaymentPopup(this)">0.00</button><input type="hidden" data-field="actualPayment" value="0.00"></td>
+        <td${approvalHiddenStyle}><input class="editable-cell derived-cell text-amount" type="number" step="0.01" data-field="balance" value="0.00" readonly></td>
+        <td class="audit-cell">${lastChangeCellHtml({ lastModifiedBy: "", lastModifiedAt: "" })}</td>
+        <td class="delete-cell">${iconButtonHtml("row-delete-btn", "Delete row", "deleteRow(this)", ICON_TRASH)}</td>
+        <td></td>
+    `;
+
+    summaryRow.insertAdjacentElement("afterend", newRow);
+    newRow.querySelectorAll("input[data-field]").forEach(input=>{
+        input.addEventListener("input", handleRowInput);
+    });
+    updateSerialNumbers(componentId);
+    updateSummaryRows();
+    if (!isEditLocked) {
+        applyRoleRestrictions();
+    } else {
+        newRow.querySelectorAll("input[data-field]").forEach(input => {
+            input.disabled = true;
+        });
+    }
+}
+function updateSerialNumbers(componentId){
+
+    const rows = document.querySelectorAll(
+        `tr[data-component-id="${componentId}"]`
+    );
+
+    const summaryRow = document.querySelector(`tr[data-summary-for-component="${componentId}"]`);
+    const mainNo = summaryRow?.getAttribute("data-component-item-id") || "1";
+
+    rows.forEach((row,index)=>{
+
+        const slCell = row.querySelector("td:first-child");
+
+        if(!slCell) return;
+
+        slCell.innerHTML = serialCellHtml(`${mainNo}.${index + 1}`);
+    });
+}
+    function downloadCurrentMonthExcel(){ window.location.href = `${API_BASE}/api/view-data/current-month/download`; }
+
+    async function highlightSubmittedComponents(){
+        if (getCurrentRole() !== "Admin(CEO)") return;
+        try {
+            const response = await fetch(`${API_BASE}/api/budget-submissions/current`);
+            if (!response.ok) return;
+            const { submission } = await response.json();
+            const pendingRows = (submission?.rows || []).filter((row) => row.reviewStatus === "Pending");
+            const componentIds = pendingRows.length
+                ? [...new Set(pendingRows.map((row) => String(row.componentId)))]
+                : (submission?.components || []).map((component) => String(component.componentId));
+            componentIds.forEach((componentId) => {
+                document.querySelector(`tr[data-summary-for-component="${componentId}"]`)?.classList.add("pending-approval-highlight");
+                if (!pendingRows.length) {
+                    document.querySelectorAll(`tr[data-component-id="${componentId}"]`).forEach((row) => row.classList.add("pending-approval-highlight"));
+                }
+            });
+            pendingRows.forEach((pendingRow) => {
+                const row = document.querySelector(`tr[data-row-id="${pendingRow.subComponentId}"]`);
+                if (!row) return;
+                row.classList.add("pending-approval-highlight");
+                addRowReviewButtons(row);
+            });
+        } catch (error) {
+            console.warn("Submission highlights could not be loaded.", error);
+        }
+    }
+
+    function addRowReviewButtons(row){
+        const actionCell = row.querySelector(".delete-cell");
+        if (!actionCell || actionCell.querySelector(".row-review-actions")) return;
+        const actions = document.createElement("span");
+        actions.className = "row-review-actions";
+        actions.innerHTML = `<button type="button" class="row-review-btn approve" title="Approve change" onclick="reviewSubmittedRow(this, 'approve')">✓</button><button type="button" class="row-review-btn reject" title="Reject change" onclick="reviewSubmittedRow(this, 'reject')">✕</button>`;
+        actionCell.prepend(actions);
+    }
+
+    async function reviewSubmittedRow(button, action){
+        const row = button.closest("tr[data-row-id]");
+        const rowId = row?.getAttribute("data-row-id");
+        if (!row || !rowId) return;
+        const confirmed = await showAppConfirm(`Are you sure you want to ${action} this submitted change?`, `${action === "approve" ? "Approve" : "Reject"} Change`);
+        if (!confirmed) return;
+        const response = await fetch(`${API_BASE}/api/budget-submissions/current/rows/${rowId}/review`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) {
+            await showAppAlert(result.error || "Unable to review this change.", "Review Failed");
+            return;
+        }
+        row.classList.remove("pending-approval-highlight");
+        row.querySelector(".row-review-actions")?.remove();
+        const componentId = row.getAttribute("data-component-id");
+        const stillPending = document.querySelector(`tr[data-component-id="${componentId}"].pending-approval-highlight`);
+        if (!stillPending) document.querySelector(`tr[data-summary-for-component="${componentId}"]`)?.classList.remove("pending-approval-highlight");
+        await showAppAlert(`Submitted change ${action === "approve" ? "approved" : "rejected"}.`, "Change Reviewed");
+    }
+
+   async function loadCurrentMonthData(){
+    let statusText = document.getElementById("statusText");
+    let dataArea = document.getElementById("dataArea");
+    let periodLabel = document.getElementById("periodLabel");
+
+    try{
+        let response = await fetch(`${API_BASE}/api/view-data/current-month`);
+
+        if(!response.ok){
+            let error = await response.json();
+            throw new Error(error.error || "Unable to load data.");
+        }
+
+        let result = await response.json();
+        currentBudgetApproved = Boolean(result.budgetApproved);
+
+        periodLabel.innerText = `${result.monthName} ${result.year}`;
+
+        statusText.className = "success-status";
+        statusText.innerText =
+            `${result.rows.length} items structured successfully.`;
+
+        dataArea.innerHTML =
+            renderRows(result.rows, result.components || []);
+
+        await highlightSubmittedComponents();
+
+        bindRowCalculations();
+        deletedSubComponentIds = [];
+        captureOriginalSnapshot();
+
+        const badge =
+            document.getElementById("editLockBadge");
+
+        if (badge) {
+            badge.onclick = toggleEditLock;
+        }
+
+        lockEditing();
+
+    } catch(error){
+
+        periodLabel.innerText = "OFFLINE";
+
+        let statusContainer = document.getElementById("statusContainer");
+        if(statusContainer) statusContainer.style.display = "block";
+        statusText.className = "error-status";
+        statusText.innerText = error.message;
+
+        dataArea.innerHTML =
+            '<div class="empty">System Pipeline Terminal Offline.</div>';
+    }
+}
+
+    function toggleUserManagementSection() {
+        const sect = document.getElementById("userManagementSection");
+        if(sect.style.display === "none") {
+            sect.style.display = "block";
+            loadUsers();
+            sect.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            sect.style.display = "none";
+        }
+    }
+
+    async function loadUsers() {
+        const statusText = document.getElementById("usersStatus");
+        const tableBody = document.getElementById("usersTableBody");
+        try {
+            const response = await fetch(`${API_BASE}/api/users`);
+            if (!response.ok) throw new Error("Failed to fetch users.");
+            const users = await response.json();
+            statusText.innerText = `${users.length} User(s) Registered`;
+            
+            tableBody.innerHTML = users.map((user, idx) => `
+                <tr style="background-color: ${idx % 2 === 0 ? '#ffffff' : '#f7fbff'}; color: var(--text-dark);">
+                    <td style="padding:12px; font-family:var(--font-mono); font-weight:600; border-bottom:1px solid var(--border-line);">${user.id}</td>
+                    <td style="padding:12px; font-weight:600; border-bottom:1px solid var(--border-line);">${user.username}</td>
+                    <td style="padding:12px; border-bottom:1px solid var(--border-line);"><span class="role-pill">${user.role}</span></td>
+                    <td style="padding:12px; text-align:center; border-bottom:1px solid var(--border-line);">
+                        <button onclick="deleteUser(${user.id})" class="btn" style="background:#dc2626; color:white; padding:6px 12px; font-size:12px; border-radius:4px; font-weight:600;">Delete</button>
+                    </td>
+                </tr>
+            `).join("");
+        } catch (error) { statusText.innerText = error.message; }
+    }
+
+    async function handleCreateUser(event) {
+        event.preventDefault();
+        const statusText = document.getElementById("formStatus");
+        const username = document.getElementById("newUsername").value.trim();
+        const password = document.getElementById("newPassword").value;
+        const role = document.getElementById("newRole").value;
+        try {
+            statusText.style.color = "var(--text-muted)";
+            statusText.innerText = "Creating profile...";
+            const response = await fetch(`${API_BASE}/api/users`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username, password, role }) });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || "Failed.");
+            statusText.style.color = "var(--signal-success)";
+            statusText.innerText = "User created successfully!";
+            document.getElementById("createUserForm").reset();
+            loadUsers();
+        } catch (error) { statusText.style.color = "red"; statusText.innerText = error.message; }
+    }
+
+    async function deleteUser(id) {
+        const confirmed = await showAppConfirm("Are you sure you want to delete this user console?", "Delete User Console");
+        if (!confirmed) return;
+        try {
+            const response = await fetch(`${API_BASE}/api/users/${id}`, { method: "DELETE" });
+            if (!response.ok) throw new Error("Failed to delete user.");
+            loadUsers();
+        } catch (error) { await showAppAlert(error.message, "Delete Failed"); }
+    }
+
+    loadCurrentMonthData();
+    
+    </script>
+    
+    <script>
+    function updateTime(){
+        const now = new Date();
+        let h = String(now.getHours()).padStart(2,'0');
+        let m = String(now.getMinutes()).padStart(2,'0'); 
+        let s = String(now.getSeconds()).padStart(2,'0');
+        const timeElem = document.getElementById("time");
+        const dateElem = document.getElementById("todayDate");
+        if(timeElem) timeElem.innerText = `${h}:${m}:${s}`;
+        if(dateElem) dateElem.innerText = now.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}).toUpperCase();
+    }
+    setInterval(updateTime,1000);
+    updateTime();
+    </script>
+
+    <script>
+    (function(){
+        const auth = JSON.parse(localStorage.getItem("financeAuth") || "null");
+        if(!auth || !auth.username || !auth.role){ window.location.replace("login.html"); return; }
+        const label = document.getElementById("welcomeLabel");
+        if(label) label.innerText = `Operator: ${auth.role.toUpperCase()}`;
+        const initialBox = document.getElementById("userInitial");
+        if(initialBox && auth.username) initialBox.innerText = auth.username.charAt(0).toUpperCase();
+    })();
+    </script>
+    <div id="actualPaymentPopup" class="popup-overlay">
+        <div class="popup-box">
+            <h3>Actual Payment</h3>
+            <div class="payment-current-line">Current Total: <strong id="paymentCurrentAmount">0.00</strong></div>
+            <select id="paymentAction" class="payment-select">
+                <option value="add">Add Amount</option>
+                <option value="subtract">Subtract Amount</option>
+                <option value="set">Set Final Total</option>
+            </select>
+            <input id="paymentAmount" class="payment-amount-input" type="number" step="0.01" min="0" placeholder="Enter amount">
+            <details id="paymentDateDetails" class="payment-date-details">
+                <summary>Payment date</summary>
+                <input id="paymentDate" class="payment-date-input" type="date" aria-label="Payment date">
+            </details>
+            <div class="popup-actions">
+                <button onclick="saveActualPaymentAdjustment()">Save</button>
+                <button onclick="closeActualPaymentPopup()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div id="lastChangePopup" class="popup-overlay">
+        <div class="popup-box">
+            <h3>Change Log</h3>
+            <div id="changeHistoryList" class="payment-history-list"></div>
+            <div class="popup-actions">
+                <button class="btn-neutral" onclick="closeLastChangePopup()">Close</button>
+            </div>
+        </div>
+    </div>
+    <div id="appMessagePopup" class="popup-overlay">
+        <div class="popup-box app-message-box">
+            <h3 id="appMessageTitle">Notice</h3>
+            <p id="appMessageBody" class="app-message-body"></p>
+            <div class="popup-actions">
+                <button id="appMessagePrimary" class="btn-primary-modal" onclick="resolveAppModal(true)">OK</button>
+                <button id="appMessageSecondary" class="btn-secondary-modal" onclick="resolveAppModal(false)">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div id="submissionPreviewPopup" class="popup-overlay">
+        <div class="popup-box submission-preview-box">
+            <h3>Submission Preview</h3>
+            <div id="submissionPreviewList" class="submission-preview-list"></div>
+            <div class="popup-actions">
+                <button id="submissionPreviewSubmit" class="btn-primary-modal" onclick="submitFromSubmissionPreview()">Submit</button>
+                <button class="btn-secondary-modal" onclick="closeSubmissionPreview()">Back to Edit</button>
+            </div>
+        </div>
+    </div>
+    <div id="dataLogsPopup" class="popup-overlay">
+        <div class="popup-box data-logs-box">
+            <div class="data-logs-title-row">
+                <h3>Data Logs</h3>
+                <button type="button" class="data-logs-close" onclick="closeDataLogsModal()">Close</button>
+            </div>
+            <div class="data-logs-grid">
+                <section class="data-log-section">
+                    <h4>Revision Logs</h4>
+                    <div id="revisionLogsList" class="data-log-list"></div>
+                </section>
+                <section class="data-log-section">
+                    <h4>Change Request Log</h4>
+                    <div id="changeRequestLogsList" class="data-log-list"></div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <div id="rejectPopup" class="popup-overlay">
+
+    <div class="popup-box reject-popup-box">
+
+        <h3 id="rejectPopupTitle">Revised Finance Data</h3>
+
+        <div id="rejectPreviewWrap" class="reject-preview-wrap">
+            <div class="reject-preview-title">Submission Preview</div>
+            <div id="rejectPreviewList" class="submission-preview-list reject-preview-list"></div>
+        </div>
+
+        <textarea
+            id="rejectReason"
+            placeholder="Enter rejection reason...">
+        </textarea>
+
+        <div class="popup-actions">
+
+            <button onclick="submitReject()">
+
+                Revised
+
+            </button>
+
+            <button onclick="closeRejectPopup()">
+
+                Cancel
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

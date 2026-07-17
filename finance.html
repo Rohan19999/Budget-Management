@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Management System</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style/finance.css">
+    <link rel="stylesheet" href="./style/sidebar.css?v=1.2">
+    <style>
+        :root {
+            --bg-main: #0B0F19;
+            --bg-card: rgba(17, 24, 39, 0.6);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #0F4CFF;
+            --primary-color: #0F4CFF;
+        }
+
+        body {
+            background: radial-gradient(circle at top right, #182235, #080B11 75%) !important;
+            color: #f8fafc !important;
+        }
+
+        .wrapper {
+            background: transparent !important;
+        }
+
+        .content-area {
+            background: transparent !important;
+        }
+
+        .top-bar {
+            background: rgba(8, 11, 17, 0.8) !important;
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .bc-date {
+            color: #94a3b8 !important;
+        }
+
+        .user-role {
+            color: #f1f5f9 !important;
+        }
+
+        .role-highlight {
+            color: #10B981 !important;
+        }
+
+        h1, h2, h3, h4 {
+            color: #ffffff !important;
+        }
+
+        .subtitle {
+            color: #94a3b8 !important;
+        }
+
+        .kpi-card, .panel-card {
+            background: rgba(17, 24, 39, 0.7) !important;
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .kpi-card:hover, .panel-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.15) !important;
+            box-shadow: 0 8px 30px rgba(15, 76, 255, 0.15) !important;
+        }
+
+        .kpi-grid .kpi-card:nth-child(1) { border-top: 3px solid #0F4CFF !important; }
+        .kpi-grid .kpi-card:nth-child(2) { border-top: 3px solid #F59E0B !important; }
+        .kpi-grid .kpi-card:nth-child(3) { border-top: 3px solid #10B981 !important; }
+        .kpi-grid .kpi-card:nth-child(4) { border-top: 3px solid #8B5CF6 !important; }
+
+        .kpi-value {
+            color: #ffffff !important;
+            font-size: 2.25rem !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.5px;
+            margin-top: 12px;
+            margin-bottom: 8px;
+        }
+
+        .logs-table th {
+            background-color: rgba(30, 41, 59, 0.8) !important;
+            color: #e2e8f0 !important;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .logs-table td {
+            color: #cbd5e1 !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+            padding: 14px 16px !important;
+        }
+
+        .logs-table tr:hover td {
+            background-color: rgba(255, 255, 255, 0.02) !important;
+        }
+
+        .pie-center-hole {
+            background-color: #0b0f19 !important;
+        }
+
+        .pie-center-value {
+            color: #ffffff !important;
+            font-size: 1.35rem !important;
+            font-weight: 700 !important;
+        }
+
+        .chart-container {
+            background: linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px) 0 0 / 100% 20px,
+                        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px) 0 0 / 20px 100% !important;
+            border-radius: 8px;
+            padding: 12px !important;
+        }
+
+        .status-banner {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            border: 1px solid transparent;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .status-banner.approved {
+            background-color: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.2);
+            color: #064e3b;
+        }
+        .status-banner.approved #statusIcon {
+            color: #10b981;
+        }
+        
+        .status-banner.pending {
+            background-color: rgba(245, 158, 11, 0.08);
+            border-color: rgba(245, 158, 11, 0.2);
+            color: #78350f;
+        }
+        .status-banner.pending #statusIcon {
+            color: #f59e0b;
+        }
+        
+        .status-banner.rejected {
+            background-color: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #7f1d1d;
+        }
+        .status-banner.rejected #statusIcon {
+            color: #ef4444;
+        }
+        
+        .status-banner.nodata {
+            background-color: rgba(59, 130, 246, 0.08);
+            border-color: rgba(59, 130, 246, 0.2);
+            color: #1e3a8a;
+        }
+        .status-banner.nodata #statusIcon {
+            color: #3b82f6;
+        }
+
+        .status-banner-icon {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .status-banner-content {
+            flex-grow: 1;
+        }
+        
+        .status-banner-content h4 {
+            margin: 0 0 4px 0;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+        
+        .status-banner-content p {
+            margin: 0;
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        
+        .status-banner-actions {
+            flex-shrink: 0;
+        }
+        
+        .status-banner-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #0F4CFF;
+            color: #ffffff;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+        .status-banner-btn:hover {
+            background-color: #0036cc;
+        }
+        
+        /* Dynamic Chart styling overrides */
+        .bar-pair {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 100%;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .bar-proposed {
+            width: 10px;
+            background: linear-gradient(to top, #0F4CFF 0%, #3b82f6 100%) !important;
+            border-radius: 2px 2px 0 0;
+            transition: all 0.25s ease;
+        }
+        .bar-proposed:hover {
+            opacity: 0.85;
+        }
+        
+        .bar-approved {
+            width: 10px;
+            background: linear-gradient(to top, #8B5CF6 0%, #a78bfa 100%) !important;
+            border-radius: 2px 2px 0 0;
+            transition: all 0.25s ease;
+        }
+        .bar-approved:hover {
+            opacity: 0.85;
+        }
+        
+        .bar-actual {
+            width: 10px;
+            background: linear-gradient(to top, #10B981 0%, #34d399 100%) !important;
+            border-radius: 2px 2px 0 0;
+            transition: all 0.25s ease;
+        }
+        .bar-actual:hover {
+            opacity: 0.85;
+        }
+        
+        .chart-legend {
+            display: flex;
+            gap: 16px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 12px;
+            justify-content: center;
+        }
+        .legend-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            display: inline-block;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        .legend-proposed { background: #0F4CFF; }
+        .legend-approved { background: #8B5CF6; }
+        .legend-actual { background: #10B981; }
+
+        .chart-log-info {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 10px;
+            margin-bottom: -4px;
+            text-align: left;
+            padding-left: 8px;
+            font-style: italic;
+        }
+
+        /* Dynamic logs styles */
+        .log-time {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        .log-amount-change {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+        .log-amount-change.positive {
+            color: #10B981;
+        }
+        .log-amount-change.negative {
+            color: #EF4444;
+        }
+        
+        /* Progress Bar styles */
+        .progress-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .progress-track {
+            flex-grow: 1;
+            height: 6px;
+            background-color: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        .progress-fill.green { background-color: #10B981 !important; }
+        .progress-fill.yellow { background-color: #F59E0B !important; }
+        .progress-fill.red { background-color: #EF4444 !important; }
+        
+        .progress-percent {
+            font-size: 0.78rem;
+            font-weight: 600;
+            width: 42px;
+            text-align: right;
+            flex-shrink: 0;
+            color: var(--text-muted);
+        }
+        .progress-percent.text-red {
+            color: #EF4444 !important;
+        }
+
+        .dashboard-filter-panel {
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .dashboard-filter-panel.hidden {
+            display: none !important;
+        }
+.dashboard-filter-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(160px, 1fr));
+    gap: 14px;
+    align-items: end;
+    padding: 20px;
+}
+
+        .filter-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .filter-field label {
+            color: var(--text-muted);
+            font-size: 0.76rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .filter-field select {
+            width: 100%;
+            min-height: 42px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(8, 11, 17, 0.8);
+            color: #f8fafc;
+            padding: 9px 10px;
+            outline: none;
+        }
+
+        .filter-field select:focus {
+            border-color: rgba(15, 76, 255, 0.75);
+            box-shadow: 0 0 0 3px rgba(15, 76, 255, 0.16);
+        }
+
+        .filter-multiselect {
+            position: relative;
+        }
+
+        .filter-multiselect-toggle {
+            width: 100%;
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(8, 11, 17, 0.8);
+            color: #f8fafc;
+            padding: 9px 10px;
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .filter-multiselect-toggle span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .filter-multiselect-toggle i {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            transition: transform 0.18s ease;
+        }
+
+        .filter-multiselect.open .filter-multiselect-toggle,
+        .filter-multiselect-toggle:focus {
+            border-color: rgba(15, 76, 255, 0.75);
+            box-shadow: 0 0 0 3px rgba(15, 76, 255, 0.16);
+            outline: none;
+        }
+
+        .filter-multiselect.open .filter-multiselect-toggle i {
+            transform: rotate(180deg);
+        }
+
+        .filter-multiselect-menu {
+            position: absolute;
+            z-index: 30;
+            top: calc(100% + 6px);
+            left: 0;
+            width: max-content;
+            min-width: 100%;
+            max-width: min(360px, calc(100vw - 48px));
+            display: none;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: #080b11;
+            box-shadow: 0 16px 28px rgba(0, 0, 0, 0.34);
+        }
+
+        .filter-multiselect.open .filter-multiselect-menu {
+            display: block;
+        }
+
+        .filter-check-group {
+            display: grid;
+            gap: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+            border-radius: inherit;
+            padding: 10px;
+        }
+
+        .filter-check-group-title {
+            color: var(--text-main);
+            font-size: 0.76rem;
+            font-weight: 700;
+            padding: 4px 0 2px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .filter-check-group-title:not(:first-child) {
+            margin-top: 6px;
+        }
+
+        .filter-check-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #f8fafc;
+            font-size: 0.86rem;
+            font-weight: 600;
+            line-height: 1.2;
+            cursor: pointer;
+        }
+
+        .filter-check-item input {
+            width: 15px;
+            height: 15px;
+            accent-color: #0F4CFF;
+            flex: 0 0 auto;
+        }
+
+        .filter-check-item span {
+            overflow-wrap: anywhere;
+        }
+
+        .filter-multiselect-menu:focus-within {
+            border-color: rgba(15, 76, 255, 0.75);
+        }
+
+        .filter-empty-state {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            padding: 2px 0;
+        }
+
+        .filter-loading {
+            opacity: 0.68;
+            pointer-events: none;
+        }
+
+        .filter-status {
+            color: #10B981;
+            font-size: 0.72rem;
+            padding: 5px 24px;
+        }
+
+        .filter-status.error {
+            color: #EF4444;
+        }
+
+        .filter-helper {
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            padding: 5px 24px;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-filter-grid {
+                grid-template-columns: repeat(2, minmax(220px, 1fr));
+            }
+        }
+
+        @media (max-width: 720px) {
+            .dashboard-filter-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        .budget-submission-notice {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(15, 23, 42, 0.46);
+        }
+        .budget-submission-notice.is-open { display: flex; }
+        .budget-submission-dialog {
+            width: min(440px, 100%);
+            padding: 28px;
+            border-radius: 14px;
+            background: #ffffff;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
+            color: var(--text-dark);
+        }
+        .budget-submission-dialog h3 { margin: 0 0 12px; color: #0f4cff !important; }
+        .budget-submission-dialog p { margin: 0; color: #475569 !important; line-height: 1.55; }
+        .budget-submission-components {
+            margin: 14px 0 0;
+            padding-left: 22px;
+            color: #334155 !important;
+            line-height: 1.55;
+            font-weight: 600;
+        }
+        .budget-submission-components li { color: #334155 !important; }
+        .budget-submission-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+        .budget-submission-actions button { border: 0; border-radius: 8px; padding: 10px 18px; font: inherit; font-weight: 700; cursor: pointer; }
+        .budget-submission-actions .notice-close { background: #e2e8f0; color: #334155; }
+        .budget-submission-actions .notice-view { background: var(--primary); color: #ffffff; }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-glass">
+                <img src="./Image/logo.png" alt="EMC Logo" class="sidebar-logo-img">
+            </div>
+            <h1 class="sidebar-logo-title">Budget Management</h1>
+            <p class="sidebar-logo-subtitle">Internal Finance Platform</p>
+        </div>
+        <div class="nav-links">
+            <a href="finance.html" class="nav-item active">
+                <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span> Dashboard Core
+            </a>
+            <a href="datamanagement.html" class="nav-item">
+                <span class="nav-icon"><i class="fa-solid fa-wallet"></i></span> Finance Hub
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon"><i class="fa-solid fa-gear"></i></span> System Settings
+            </a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="user-profile-section">
+                <div class="user-avatar" id="sidebarAvatar">U</div>
+                <div class="user-meta">
+                    <span class="user-name" id="sidebarUserName">Loading...</span>
+                    <span class="user-role-label" id="sidebarUserRole">Operator</span>
+                </div>
+            </div>
+            <button class="logout-btn" id="sidebarLogoutBtn">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Sign Out</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="wrapper">
+        
+        <header class="top-bar">
+            <div class="breadcrumb-container">
+                     <div class="profile-info">
+                    <span id="welcomeLabel" class="user-role">LOADING OPERATOR...</span>
+                </div>
+                <div class="bc-date" id="greeting-date">Loading dashboard context...</div>
+            </div>
+                   <div class="user-profile">
+
+ <button id="themeToggle" class="theme-toggle">
+    <span class="toggle-icon">
+        <i class="fa-solid fa-moon"></i>
+    </span>
+
+    <span class="toggle-text">
+        Dark
+    </span>
+</button>
+
+                <a href="index.html" class="avatar" id="userInitial">F</a>
+            </div>
+        </header>
+
+        <main class="content-area">
+            
+            <div class="page-header">
+                <div>
+                    <h1>System Analytics</h1>
+                    <p class="subtitle">Overview of current corporate capital lifecycle and active system nodes.</p>
+                </div>
+            </div>
+
+            <!-- Dynamic Status Banner -->
+            <div id="statusBanner" class="status-banner hidden">
+                <div class="status-banner-icon">
+                    <i id="statusIcon" class="fa-solid"></i>
+                </div>
+                <div class="status-banner-content">
+                    <h4 id="statusTitle">Budget Status</h4>
+                    <p id="statusDesc">Determining current monthly budget state...</p>
+                </div>
+                <div id="statusActionContainer" class="status-banner-actions hidden">
+                    <a href="datamanagement.html" class="status-banner-btn">Review Budget</a>
+                </div>
+            </div>
+
+            <section id="ceoDashboardFilters" class="panel-card dashboard-filter-panel hidden">
+                <div class="panel-header">
+                    <h2>
+                        <i class="fa-solid fa-filter"></i>
+                        Dashboard Comparison Filters
+                    </h2>
+                </div>
+                <div class="dashboard-filter-grid">
+                    <div class="filter-field">
+                        <label for="filterYear">Choose Year</label>
+                        <select id="filterYear"></select>
+                    </div>
+                    <div class="filter-field">
+                        <label>Choose Quarter</label>
+                        <div id="filterQuarter" class="filter-multiselect">
+                            <button type="button" class="filter-multiselect-toggle" aria-expanded="false">
+                                <span>Choose quarter</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div class="filter-multiselect-menu"><div class="filter-check-group"></div></div>
+                        </div>
+                    </div>
+                    <div class="filter-field">
+                        <label>Choose Month</label>
+                        <div id="filterMonth" class="filter-multiselect">
+                            <button type="button" class="filter-multiselect-toggle" aria-expanded="false">
+                                <span>Choose month</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div class="filter-multiselect-menu"><div class="filter-check-group"></div></div>
+                        </div>
+                    </div>
+                    <div class="filter-field">
+                        <label>Choose Component</label>
+                        <div id="filterComponent" class="filter-multiselect">
+                            <button type="button" class="filter-multiselect-toggle" aria-expanded="false">
+                                <span>Choose component</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div class="filter-multiselect-menu"><div class="filter-check-group"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-helper">Changes update the comparison automatically.</div>
+                <div id="filterStatus" class="filter-status"></div>
+            </section>
+
+            <section class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-meta">
+                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                        Gross Operating Capital
+                    </div>
+                    <div class="kpi-value" id="kpiGrossCapital">-</div>
+                    <div class="kpi-footer">
+                        <span class="trend-label">Proposed Budget for Month</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-meta">
+                        <i class="fa-solid fa-building-columns"></i>
+                        Outstanding Liabilities
+                    </div>
+                    <div class="kpi-value" id="kpiLiabilities">-</div>
+                    <div class="kpi-footer">
+                        <span class="trend-label">Combined existing & estimated</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-meta">
+                        <i class="fa-solid fa-credit-card"></i>
+                        Month Disbursements
+                    </div>
+                    <div class="kpi-value" id="kpiDisbursements">-</div>
+                    <div class="kpi-footer">
+                        <span class="trend-label">Actual settled payments</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-meta">
+                        <i class="fa-solid fa-calculator"></i>
+                        Balance Liability
+                    </div>
+                    <div class="kpi-value" id="kpiBalance">-</div>
+                    <div class="kpi-footer">
+                        <span class="trend-label">Pending month-end balance</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="data-grid">
+                
+                <div class="charts-stack">
+                    <div class="panel-card chart-panel">
+                        <div class="panel-header">
+                            <h2>
+                                <i class="fa-solid fa-chart-column"></i>
+                                Capital Outflow Trend
+                            </h2>
+                            <span class="panel-tag">Proposed vs Actual</span>
+                        </div>
+                        <div class="chart-container">
+                            <div class="chart-y-axis">
+                                <span>MAX</span>
+                                <span>MID</span>
+                                <span>0L</span>
+                            </div>
+                            <div class="chart-bars" id="chartBars">
+                                <div style="width: 100%; text-align: center; color: var(--text-muted); padding-top: 40px;">Loading trend data...</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-legend">
+                            <div><span class="legend-indicator legend-proposed"></span>Proposed Budget</div>
+                            <div><span class="legend-indicator legend-approved"></span>Approved Budget</div>
+                            <div><span class="legend-indicator legend-actual"></span>Actual Expenditure</div>
+                        </div>
+                        <div class="chart-log-info" id="chartLastUpdated">This chart is last updated at --:-- and -- --- ----.</div>
+                    </div>
+
+                 
+                </div>
+  <div class="panel-card pie-panel">
+                        <div class="panel-header">
+                            <h2>
+                                <i class="fa-solid fa-chart-pie"></i>
+                                Budget
+                            </h2>
+                            <div class="budget-metric-tabs" role="tablist" aria-label="Budget chart view">
+                                <button type="button" class="budget-metric-tab active" data-budget-metric="approved" role="tab" aria-selected="true">Approved Budget</button>
+                                <button type="button" class="budget-metric-tab" data-budget-metric="actual" role="tab" aria-selected="false">Actual Expenditure</button>
+                            </div>
+                        </div>
+                        <div class="pie-layout">
+                            <div class="pie-chart-wrapper">
+                                <div class="modern-pie"></div>
+                                <div class="pie-center-hole">
+                                    <span class="pie-center-value">-</span>
+                                    <span class="pie-center-label">Total</span>
+                                </div>
+                            </div>
+                            <div class="pie-legends">
+                                <div style="color: var(--text-muted); font-size: 0.85rem;">Calculating allocation...</div>
+                            </div>
+                        </div>
+                    </div>
+                      </section>
+                <div class="panel-card logs-panel">
+                    <div class="panel-header">
+                        <h2>
+                            <i class="fa-solid fa-folder-tree"></i>
+                            Component Budget Summary & Variance
+                        </h2>
+                        <span class="panel-tag">Current Month</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="logs-table">
+                            <thead>
+                                <tr>
+                                    <th>Component Category</th>
+                                    <th>Proposed Budget</th>
+                                    <th>Approved Budget</th>
+                                    <th>Actual Expenditure</th>
+                                    <th style="width: 200px;">Utilization & Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody id="componentSummaryTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">Loading component summary...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+          
+        </main>
+
+        <footer class="sys-footer">
+            <div class="footer-segment">
+                <span>© Budget Management System</span>
+            </div>
+            <div class="footer-node">
+                <span id="time-clock">00:00:00</span>
+                <span style="color: #b0c4de; margin-left: 10px;">| FINANCE-DASHBOARD</span>
+            </div>
+        </footer>
+    </div>
+
+    <div id="budgetSubmissionNotice" class="budget-submission-notice" role="dialog" aria-modal="true" aria-labelledby="budgetSubmissionTitle">
+        <div class="budget-submission-dialog">
+            <h3 id="budgetSubmissionTitle">Budget Awaiting Approval</h3>
+            <p id="budgetSubmissionMessage"></p>
+            <ul id="budgetSubmissionComponents" class="budget-submission-components"></ul>
+            <div class="budget-submission-actions">
+                <button type="button" class="notice-close" onclick="closeBudgetSubmissionNotice()">Close</button>
+                <button type="button" class="notice-view" onclick="viewSubmittedBudget()">View Data</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="config.js"></script>
+    <script>
+        // Live Clock & Date Handler
+        function runClock(){
+            const now = new Date();
+            const timeString = now.toTimeString().split(' ')[0];
+            document.getElementById("time-clock").innerText = timeString;
+        }
+        setInterval(runClock, 1000); 
+        runClock();
+
+        // Authentication & Role Handler
+        (function(){
+            let auth = JSON.parse(localStorage.getItem("financeAuth") || "null");
+            if(!auth || !auth.role) {
+                auth = { username: "admin_master", role: "Administrator" };
+                localStorage.setItem("financeAuth", JSON.stringify(auth));
+            }
+            document.getElementById("welcomeLabel").innerHTML =
+                ` Welcome, <span class="role-highlight">${auth.role.toUpperCase()}</span>`;
+            
+            // Populate sidebar user profile
+            const nameElem = document.getElementById("sidebarUserName");
+            const roleElem = document.getElementById("sidebarUserRole");
+            const avatarElem = document.getElementById("sidebarAvatar");
+            if(nameElem && auth.username) {
+                nameElem.innerText = auth.fullName || auth.username;
+            }
+            if(roleElem && auth.role) {
+                roleElem.innerText = auth.role;
+            }
+            if(avatarElem && auth.username) {
+                avatarElem.innerText = auth.username.charAt(0).toUpperCase();
+            }
+
+            // Bind logout button
+            const logoutBtn = document.getElementById("sidebarLogoutBtn");
+            if(logoutBtn) {
+                logoutBtn.addEventListener("click", () => {
+                    localStorage.removeItem("financeAuth");
+                    window.location.href = "login.html";
+                });
+            }
+        })();
+
+        // CEO-only: show each monthly Finance Admin submission once, immediately after login.
+        (async function showBudgetSubmissionNotice(){
+            const auth = JSON.parse(localStorage.getItem("financeAuth") || "null");
+            if (auth?.role !== "Admin(CEO)" || !auth?.username) return;
+
+            const API_BASE = window.FINANCE_API_BASE || "http://localhost:5050";
+            try {
+                const response = await fetch(`${API_BASE}/api/budget-submissions/pending?username=${encodeURIComponent(auth.username)}`);
+                if (!response.ok) return;
+                const { submission } = await response.json();
+                if (!submission) return;
+
+                await fetch(`${API_BASE}/api/budget-submissions/${submission.id}/seen`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username: auth.username })
+                });
+
+                const submittedAt = new Date(`${String(submission.submittedAt).replace(" ", "T")}Z`);
+                const timestamp = Number.isNaN(submittedAt.getTime())
+                    ? submission.submittedAt
+                    : submittedAt.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+                document.getElementById("budgetSubmissionMessage").textContent = `Finance admin submitted budget on ${timestamp}.`;
+                const componentsList = document.getElementById("budgetSubmissionComponents");
+                componentsList.innerHTML = "";
+                (submission.components || []).forEach((component) => {
+                    const item = document.createElement("li");
+                    item.textContent = component.componentName;
+                    componentsList.appendChild(item);
+                });
+                componentsList.style.display = componentsList.children.length ? "block" : "none";
+                document.getElementById("budgetSubmissionNotice").classList.add("is-open");
+            } catch (error) {
+                console.warn("Budget submission notice could not be loaded.", error);
+            }
+        })();
+
+        function closeBudgetSubmissionNotice(){
+            document.getElementById("budgetSubmissionNotice")?.classList.remove("is-open");
+        }
+
+        function viewSubmittedBudget(){
+            window.location.href = "datamanagement.html?tab=viewdata";
+        }
+
+        let budgetPieMetric = "approved";
+        let latestBudgetComponentSummary = [];
+
+        function formatBudgetPieAmount(value) {
+            const amount = Number(value) || 0;
+            if (amount >= 10000000) return `Rs ${(amount / 10000000).toFixed(2)}Cr`;
+            if (amount >= 100000) return `Rs ${(amount / 100000).toFixed(2)}L`;
+            if (amount >= 10000) return `Rs ${(amount / 1000).toFixed(2)}K`;
+            return `Rs ${amount.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+
+        function renderBudgetPie(componentSummary = latestBudgetComponentSummary) {
+            latestBudgetComponentSummary = Array.isArray(componentSummary) ? componentSummary : [];
+            const valueField = budgetPieMetric === "actual" ? "actualSum" : "approvedSum";
+            const metricLabel = budgetPieMetric === "actual" ? "Actual Expenditure" : "Approved Budget";
+            const rows = latestBudgetComponentSummary
+                .map((row) => [row.componentName || "Others", Number(row[valueField]) || 0])
+                .filter((row) => row[1] > 0);
+            const total = rows.reduce((sum, row) => sum + row[1], 0);
+            const pieChart = document.querySelector(".modern-pie");
+            const legendContainer = document.querySelector(".pie-legends");
+            const centerValue = document.querySelector(".pie-center-value");
+            const centerLabel = document.querySelector(".pie-center-label");
+
+            if (centerValue) centerValue.innerText = formatBudgetPieAmount(total);
+            if (centerLabel) centerLabel.innerText = metricLabel;
+            if (!pieChart || !legendContainer) return;
+
+            if (!rows.length || total <= 0) {
+                pieChart.style.background = "#e2e8f0";
+                legendContainer.innerHTML = `<div style="font-size:0.8rem;color:var(--text-muted);">No ${metricLabel.toLowerCase()} recorded for this month.</div>`;
+                return;
+            }
+
+            const colors = ["#0F4CFF", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899", "#6B7280"];
+            let accumulatedPercent = 0;
+            const gradientParts = [];
+            legendContainer.innerHTML = "";
+            rows.forEach(([name, amount], index) => {
+                const percent = (amount / total) * 100;
+                const color = colors[index % colors.length];
+                gradientParts.push(`${color} ${accumulatedPercent}% ${accumulatedPercent + percent}%`);
+                accumulatedPercent += percent;
+                const legendItem = document.createElement("div");
+                legendItem.className = "legend-item";
+                legendItem.innerHTML = `<span class="legend-color" style="background-color: ${color};"></span><span class="legend-name">${name} (${percent.toFixed(0)}%)</span>`;
+                legendContainer.appendChild(legendItem);
+            });
+            pieChart.style.background = `conic-gradient(${gradientParts.join(", ")})`;
+        }
+
+        document.querySelectorAll(".budget-metric-tab").forEach((tab) => {
+            tab.addEventListener("click", () => {
+                budgetPieMetric = tab.dataset.budgetMetric;
+                document.querySelectorAll(".budget-metric-tab").forEach((button) => {
+                    const isActive = button === tab;
+                    button.classList.toggle("active", isActive);
+                    button.setAttribute("aria-selected", String(isActive));
+                });
+                renderBudgetPie();
+            });
+        });
+
+        // Dynamic Dashboard Data Fetcher
+        (async function() {
+            const API_BASE = window.FINANCE_API_BASE || "http://localhost:5050";
+
+            try {
+                const response = await fetch(`${API_BASE}/api/dashboard/stats`);
+                if (!response.ok) {
+                    throw new Error("Unable to fetch dashboard statistics");
+                }
+                const data = await response.json();
+
+                const { activePeriod, summary, recentLogs, charts, userSummary } = data;
+
+                // 1. Update Date/Time Info Header
+                const greetingDate = document.getElementById("greeting-date");
+                if (greetingDate) {
+                    const now = new Date();
+                    const hour = now.getHours();
+                    let greeting = hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
+                    greetingDate.innerText = `${greeting} | ${now.toLocaleDateString('en-GB')}`;
+                }
+
+                // 2. Render Status Banner
+                const statusBanner = document.getElementById("statusBanner");
+                const statusIcon = document.getElementById("statusIcon");
+                const statusTitle = document.getElementById("statusTitle");
+                const statusDesc = document.getElementById("statusDesc");
+                const statusActionContainer = document.getElementById("statusActionContainer");
+
+                if (statusBanner) {
+                    statusBanner.className = "status-banner"; // reset
+                    statusActionContainer.classList.add("hidden");
+
+                    if (summary.approvalStatus === 'Approved') {
+                        statusBanner.classList.add("approved");
+                        statusIcon.className = "fa-solid fa-circle-check";
+                        statusTitle.innerText = "Budget Approved";
+                        statusDesc.innerText = "The budget for this month has been approved by the CEO. Accounting ledgers and actual payment logging are currently active.";
+                    } else if (summary.approvalStatus === 'Rejected - Finance Admin Revision') {
+                        statusBanner.classList.add("rejected");
+                        statusIcon.className = "fa-solid fa-circle-xmark";
+                        statusTitle.innerText = "Revision Required";
+                        statusDesc.innerHTML = `<strong>CEO Remarks:</strong> "${summary.ceoRemarks || 'No remarks provided.'}"`;
+                        statusActionContainer.classList.remove("hidden");
+                    } else if (summary.approvalStatus === 'Pending') {
+                        statusBanner.classList.add("pending");
+                        statusIcon.className = "fa-solid fa-clock";
+                        statusTitle.innerText = "Awaiting CEO Approval";
+                        statusDesc.innerText = "The current month's budget details have been updated and are awaiting review and approval by the CEO.";
+                    } else { // No Data
+                        statusBanner.classList.add("nodata");
+                        statusIcon.className = "fa-solid fa-circle-info";
+                        statusTitle.innerText = "No Active Budget Records";
+                        statusDesc.innerText = "There are no components or sub-components recorded for this month. Please import data from Excel in the Finance Hub.";
+                        statusActionContainer.classList.remove("hidden");
+                    }
+                    statusBanner.classList.remove("hidden");
+                }
+                // 3. Populate KPI Card Values
+                const formatCurrency = (val) => {
+                    const num = Number(val) || 0;
+                    return "Rs " + num.toLocaleString("en-IN", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                };
+
+                const grossCapitalElem = document.getElementById("kpiGrossCapital");
+                if (grossCapitalElem) grossCapitalElem.innerText = formatCurrency(summary.proposedBudget);
+
+                const liabilitiesElem = document.getElementById("kpiLiabilities");
+                if (liabilitiesElem) liabilitiesElem.innerText = formatCurrency(summary.totalLiability);
+
+                const disbursementsElem = document.getElementById("kpiDisbursements");
+                if (disbursementsElem) disbursementsElem.innerText = formatCurrency(summary.actualPayment);
+
+                const balanceElem = document.getElementById("kpiBalance");
+                if (balanceElem) balanceElem.innerText = formatCurrency(summary.balanceLiability);
+                // 4. Render Dynamic 3-Bar Chart (Proposed vs Approved vs Actual)
+                const chartBarsContainer = document.getElementById("chartBars");
+                const chartLogElem = document.getElementById("chartLastUpdated");
+                
+                if (chartLogElem) {
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false });
+                    const dateString = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+                    chartLogElem.innerText = `This chart is last updated at ${timeString} and ${dateString}.`;
+                }
+
+                if (chartBarsContainer && charts && charts.length > 0) {
+                    chartBarsContainer.innerHTML = "";
+
+                    // Find max value for scaling heights to max 100%
+                    const maxVal = Math.max(...charts.map(c => Math.max(c.proposedBudget, c.approvedBudget, c.actualPayment)), 1);
+
+                    charts.forEach(month => {
+                        const proposedPct = (month.proposedBudget / maxVal) * 100;
+                        const approvedPct = (month.approvedBudget / maxVal) * 100;
+                        const actualPct = (month.actualPayment / maxVal) * 100;
+
+                        const barGroup = document.createElement("div");
+                        barGroup.className = "bar-group";
+                        barGroup.innerHTML = `
+                            <div class="bar-pair">
+                                <div class="bar bar-proposed" style="height: ${Math.max(proposedPct, 4)}%;" title="Proposed Budget: ${formatCurrency(month.proposedBudget)}"></div>
+                                <div class="bar bar-approved" style="height: ${Math.max(approvedPct, 4)}%;" title="Approved Budget: ${formatCurrency(month.approvedBudget)}"></div>
+                                <div class="bar bar-actual" style="height: ${Math.max(actualPct, 4)}%;" title="Actual Expenditure: ${formatCurrency(month.actualPayment)}"></div>
+                            </div>
+                            <span class="bar-label" style="position: static; margin-top: 4px;">${month.monthName.substring(0,3)}</span>
+                        `;
+                        chartBarsContainer.appendChild(barGroup);
+                    });
+                }
+
+                // 5. Render Asset Allocation (Pie Chart) from actual active Components
+                const compResponse = await fetch(`${API_BASE}/api/view-data/current-month`);
+                if (compResponse.ok) {
+                    const compData = await compResponse.json();
+                    const componentRows = Array.isArray(compData) ? compData : (compData.rows || []);
+                    
+                    // Group sums by component
+                    const componentsMap = new Map();
+                    let totalProposedSum = 0;
+
+                    componentRows.forEach(row => {
+                        const name = row.componentName || "Others";
+                        const amount = Number(row.proposedBudget || row.amountValue || 0);
+                        if (!componentsMap.has(name)) {
+                            componentsMap.set(name, 0);
+                        }
+                        componentsMap.set(name, componentsMap.get(name) + amount);
+                        totalProposedSum += amount;
+                    });
+
+                    // Sort components by sum descending
+                    const sortedComponents = [...componentsMap.entries()].sort((a,b) => b[1] - a[1]);
+
+                    const pieChart = document.querySelector(".modern-pie");
+                    const legendContainer = document.querySelector(".pie-legends");
+                    const centerValue = document.querySelector(".pie-center-value");
+                    const formatPieAmount = (value) => {
+                        const amount = Number(value) || 0;
+                        if (amount >= 10000000) return `Rs ${(amount / 10000000).toFixed(2)}Cr`;
+                        if (amount >= 100000) return `Rs ${(amount / 100000).toFixed(2)}L`;
+                        if (amount >= 10000) return `Rs ${(amount / 1000).toFixed(2)}K`;
+                        return `Rs ${amount.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                    };
+
+                    if (centerValue) {
+                        centerValue.innerText = formatPieAmount(totalProposedSum);
+                    }
+
+                    if (pieChart && sortedComponents.length > 0 && totalProposedSum > 0) {
+                        let accumulatedPercent = 0;
+                        const colors = ["#0F4CFF", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899", "#6B7280"];
+                        
+                        const gradientParts = [];
+                        if (legendContainer) legendContainer.innerHTML = "";
+
+                        sortedComponents.forEach(([name, amount], index) => {
+                            const percent = (amount / totalProposedSum) * 100;
+                            const color = colors[index % colors.length];
+                            
+                            gradientParts.push(`${color} ${accumulatedPercent}% ${accumulatedPercent + percent}%`);
+                            accumulatedPercent += percent;
+
+                            // Add to legend
+                            if (legendContainer) {
+                                const legendItem = document.createElement("div");
+                                legendItem.className = "legend-item";
+                                legendItem.innerHTML = `
+                                    <span class="legend-color" style="background-color: ${color};"></span>
+                                    <span class="legend-name">${name} (${percent.toFixed(0)}%)</span>
+                                `;
+                                legendContainer.appendChild(legendItem);
+                            }
+                        });
+
+                        pieChart.style.background = `conic-gradient(${gradientParts.join(', ')})`;
+                    } else if (pieChart) {
+                        pieChart.style.background = "#e2e8f0";
+                        if (legendContainer) {
+                            legendContainer.innerHTML = '<div style="font-size:0.8rem;color:var(--text-muted);">No allocation details found</div>';
+                        }
+                    }
+                }
+                // 6. Bind Component Budget Summary & Variance Table
+                const compTableBody = document.getElementById("componentSummaryTableBody");
+                if (compTableBody) {
+                    const componentSummary = data.componentSummary;
+                    if (componentSummary && componentSummary.length > 0) {
+                        compTableBody.innerHTML = "";
+                        componentSummary.forEach(row => {
+                            const proposed = Number(row.proposedSum) || 0;
+                            const approved = Number(row.approvedSum) || 0;
+                            const actual = Number(row.actualSum) || 0;
+                            
+                            // Utilization based on Approved if approved, else on Proposed
+                            const baseVal = approved > 0 ? approved : proposed;
+                            const pct = baseVal > 0 ? (actual / baseVal) * 100 : 0;
+                            
+                            let colorClass = "green";
+                            if (pct >= 90 && pct <= 100) colorClass = "yellow";
+                            else if (pct > 100) colorClass = "red";
+
+                            const tr = document.createElement("tr");
+                            tr.innerHTML = `
+                                <td><strong>${row.componentName}</strong></td>
+                                <td style="font-weight: 500;">${formatCurrency(proposed)}</td>
+                                <td style="font-weight: 500; color: ${approved > 0 ? 'var(--primary)' : 'var(--text-muted)'};">
+                                    ${approved > 0 ? formatCurrency(approved) : '<em>Unapproved</em>'}
+                                </td>
+                                <td style="font-weight: 600; color: #10B981;">${formatCurrency(actual)}</td>
+                                <td>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-track">
+                                            <div class="progress-fill ${colorClass}" style="width: ${Math.min(pct, 100)}%;"></div>
+                                        </div>
+                                        <span class="progress-percent ${colorClass === 'red' ? 'text-red' : ''}">${pct.toFixed(0)}%</span>
+                                    </div>
+                                </td>
+                            `;
+                            compTableBody.appendChild(tr);
+                        });
+                    } else {
+                        compTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">No component allocations recorded for this month.</td></tr>`;
+                    }
+                }
+
+                renderBudgetPie(data.componentSummary);
+
+            } catch (err) {
+                console.error(err);
+            }
+        })();
+
+        // CEO-only dashboard comparison filters
+        (async function() {
+            const API_BASE = window.FINANCE_API_BASE || "http://localhost:5050";
+            const auth = JSON.parse(localStorage.getItem("financeAuth") || "null") || {};
+            const isCeoAccount = String(auth.role || "").toLowerCase().includes("ceo");
+            const filterPanel = document.getElementById("ceoDashboardFilters");
+            if (!isCeoAccount || !filterPanel) return;
+
+            const monthOrder = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
+            const quarterMonths = {
+                Q1: [3, 4, 5],
+                Q2: [6, 7, 8],
+                Q3: [9, 10, 11],
+                Q4: [0, 1, 2]
+            };
+            let filterOptions = null;
+            let refreshTimer = null;
+
+            const formatCurrency = (val) => {
+                const num = Number(val) || 0;
+                return "Rs " + num.toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            };
+
+            const selectedValues = (control) => {
+                if (!control) return [];
+                if (control.tagName === "SELECT") {
+                    return Array.from(control.selectedOptions || []).map((option) => option.value);
+                }
+                return Array.from(control.querySelectorAll("input[type='checkbox']:checked")).map((input) => input.value);
+            };
+
+            function currentFinancialYear() {
+                const now = new Date();
+                return now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1;
+            }
+
+            function currentFinancialQuarter() {
+                const month = new Date().getMonth();
+                return Object.keys(quarterMonths).find((quarter) => quarterMonths[quarter].includes(month)) || "Q1";
+            }
+
+            function setSelectOptions(control, options, selected = []) {
+                if (!control) return;
+                const selectedSet = new Set(selected.map(String));
+                const checkboxGroup = control.tagName === "SELECT"
+                    ? control
+                    : control.querySelector(".filter-check-group");
+                if (!checkboxGroup) return;
+                checkboxGroup.innerHTML = "";
+                options.forEach((option) => {
+                    const value = String(option.value ?? option);
+                    const label = option.label ?? option;
+                    if (control.tagName === "SELECT") {
+                        const item = document.createElement("option");
+                        item.value = value;
+                        item.textContent = label;
+                        item.selected = selectedSet.has(value);
+                        control.appendChild(item);
+                        return;
+                    }
+
+                    const item = document.createElement("label");
+                    const checkbox = document.createElement("input");
+                    const text = document.createElement("span");
+                    item.className = "filter-check-item";
+                    checkbox.type = "checkbox";
+                    checkbox.value = value;
+                    checkbox.checked = selectedSet.has(value);
+                    text.textContent = label;
+                    item.appendChild(checkbox);
+                    item.appendChild(text);
+                    checkboxGroup.appendChild(item);
+                });
+
+                if (control.tagName !== "SELECT" && options.length === 0) {
+                    checkboxGroup.innerHTML = '<div class="filter-empty-state">No options found</div>';
+                }
+                updateMultiSelectLabel(control);
+            }
+
+            function updateMultiSelectLabel(control) {
+                if (!control || control.tagName === "SELECT") return;
+                const label = control.previousElementSibling?.textContent?.trim() || "Options";
+                const selected = Array.from(control.querySelectorAll("input[type='checkbox']:checked"));
+                const text = control.querySelector(".filter-multiselect-toggle span");
+                if (!text) return;
+                if (selected.length === 0) {
+                    text.textContent = `Choose ${label.replace(/^Choose\s+/i, "").toLowerCase()}`;
+                } else if (selected.length === 1) {
+                    text.textContent = selected[0].nextElementSibling?.textContent || "1 selected";
+                } else {
+                    text.textContent = `${selected.length} selected`;
+                }
+            }
+
+            function setupMultiSelect(control) {
+                if (!control) return;
+                const toggle = control.querySelector(".filter-multiselect-toggle");
+                if (!toggle) return;
+                toggle.addEventListener("click", (event) => {
+                    event.stopPropagation();
+                    const willOpen = !control.classList.contains("open");
+                    document.querySelectorAll(".filter-multiselect.open").forEach((other) => {
+                        other.classList.remove("open");
+                        other.querySelector(".filter-multiselect-toggle")?.setAttribute("aria-expanded", "false");
+                    });
+                    control.classList.toggle("open", willOpen);
+                    toggle.setAttribute("aria-expanded", String(willOpen));
+                });
+                control.addEventListener("change", () => updateMultiSelectLabel(control));
+            }
+
+            function updateMonthOptions() {
+                if (!filterOptions) return;
+                const quarterSelect = document.getElementById("filterQuarter");
+                const monthSelect = document.getElementById("filterMonth");
+                const selectedQuarters = selectedValues(quarterSelect);
+                const allowedMonths = selectedQuarters.length
+                    ? selectedQuarters.flatMap((quarter) => quarterMonths[quarter] || [])
+                    : monthOrder;
+                const previousMonths = new Set(selectedValues(monthSelect));
+                const monthOptions = filterOptions.months.filter((month) => allowedMonths.includes(Number(month.value)));
+                const nextSelection = monthOptions
+                    .map((month) => String(month.value))
+                    .filter((month) => previousMonths.has(month));
+                setSelectOptions(monthSelect, monthOptions, nextSelection.length ? nextSelection : monthOptions.map((month) => month.value));
+                updateComponentOptions();
+            }
+
+            function updateComponentOptions() {
+                if (!filterOptions) return;
+                const componentSelect = document.getElementById("filterComponent");
+                const checkboxGroup = componentSelect?.querySelector(".filter-check-group");
+                if (!componentSelect || !checkboxGroup) return;
+
+                const financialYear = Number(document.getElementById("filterYear")?.value || currentFinancialYear());
+                const selectedMonths = selectedValues(document.getElementById("filterMonth")).map(Number);
+                const previousSelection = new Set(selectedValues(componentSelect));
+                const selectedGroups = (filterOptions.componentGroups || []).filter((group) => {
+                    const expectedYear = Number(group.monthIndex) <= 2 ? financialYear + 1 : financialYear;
+                    return Number(group.year) === expectedYear && selectedMonths.includes(Number(group.monthIndex));
+                });
+                // Keep the existing component list visible while an already-running backend
+                // is still serving the earlier filter-options response.
+                if (!selectedGroups.length && Array.isArray(filterOptions.components)) {
+                    selectedMonths.forEach((monthIndex) => {
+                        const year = monthIndex <= 2 ? financialYear + 1 : financialYear;
+                        selectedGroups.push({
+                            year,
+                            monthIndex,
+                            monthName: filterOptions.months.find((month) => Number(month.value) === monthIndex)?.label || "Month",
+                            components: filterOptions.components.map((component) => ({ value: component, label: component }))
+                        });
+                    });
+                }
+                const availableComponentIds = selectedGroups.flatMap((group) => group.components.map((component) => String(component.value)));
+                const nextSelection = availableComponentIds.filter((componentId) => previousSelection.has(componentId));
+                const selectedSet = new Set(nextSelection);
+
+                checkboxGroup.innerHTML = "";
+                selectedGroups.forEach((group) => {
+                    const heading = document.createElement("div");
+                    heading.className = "filter-check-group-title";
+                    heading.textContent = `${group.monthName} ${group.year}`;
+                    checkboxGroup.appendChild(heading);
+
+                    group.components.forEach((component) => {
+                        const item = document.createElement("label");
+                        const checkbox = document.createElement("input");
+                        const text = document.createElement("span");
+                        item.className = "filter-check-item";
+                        checkbox.type = "checkbox";
+                        checkbox.value = String(component.value);
+                        checkbox.checked = selectedSet.has(checkbox.value);
+                        text.textContent = component.label;
+                        item.appendChild(checkbox);
+                        item.appendChild(text);
+                        checkboxGroup.appendChild(item);
+                    });
+                });
+
+                if (!selectedGroups.length) {
+                    checkboxGroup.innerHTML = '<div class="filter-empty-state">No components found for the selected months</div>';
+                }
+                updateMultiSelectLabel(componentSelect);
+            }
+
+            function scheduleFilteredDashboardLoad() {
+                window.clearTimeout(refreshTimer);
+                refreshTimer = window.setTimeout(loadFilteredDashboard, 180);
+            }
+
+            function buildFilterQuery() {
+                const params = new URLSearchParams();
+                const quarters = selectedValues(document.getElementById("filterQuarter"));
+                const months = selectedValues(document.getElementById("filterMonth"));
+                const components = selectedValues(document.getElementById("filterComponent"));
+                const financialYear = document.getElementById("filterYear")?.value;
+
+                if (financialYear) params.set("financialYear", financialYear);
+                if (quarters.length) params.set("quarters", quarters.join(","));
+                if (months.length) params.set("months", months.join(","));
+                if (components.length) params.set("components", components.join("||"));
+                return params.toString();
+            }
+
+            function renderStatus(summary) {
+                const statusBanner = document.getElementById("statusBanner");
+                const statusIcon = document.getElementById("statusIcon");
+                const statusTitle = document.getElementById("statusTitle");
+                const statusDesc = document.getElementById("statusDesc");
+                const statusActionContainer = document.getElementById("statusActionContainer");
+                if (!statusBanner) return;
+
+                statusBanner.className = "status-banner";
+                statusActionContainer.classList.add("hidden");
+
+                if (summary.approvalStatus === "Approved") {
+                    statusBanner.classList.add("approved");
+                    statusIcon.className = "fa-solid fa-circle-check";
+                    statusTitle.innerText = "Budget Approved";
+                    statusDesc.innerText = "The selected budget data is approved. Accounting ledgers and actual payment logging are currently active.";
+                } else if (summary.approvalStatus === "Rejected - Finance Admin Revision") {
+                    statusBanner.classList.add("rejected");
+                    statusIcon.className = "fa-solid fa-circle-xmark";
+                    statusTitle.innerText = "Revision Required";
+                    statusDesc.innerHTML = `<strong>CEO Remarks:</strong> "${summary.ceoRemarks || "No remarks provided."}"`;
+                    statusActionContainer.classList.remove("hidden");
+                } else if (summary.approvalStatus === "Pending") {
+                    statusBanner.classList.add("pending");
+                    statusIcon.className = "fa-solid fa-clock";
+                    statusTitle.innerText = "Awaiting CEO Approval";
+                    statusDesc.innerText = "The selected budget details are awaiting review and approval by the CEO.";
+                } else {
+                    statusBanner.classList.add("nodata");
+                    statusIcon.className = "fa-solid fa-circle-info";
+                    statusTitle.innerText = "No Active Budget Records";
+                    statusDesc.innerText = "There are no components or sub-components recorded for the selected filters.";
+                    statusActionContainer.classList.remove("hidden");
+                }
+                statusBanner.classList.remove("hidden");
+            }
+
+            function renderKpis(summary) {
+                document.getElementById("kpiGrossCapital").innerText = formatCurrency(summary.proposedBudget);
+                document.getElementById("kpiLiabilities").innerText = formatCurrency(summary.totalLiability);
+                document.getElementById("kpiDisbursements").innerText = formatCurrency(summary.actualPayment);
+                document.getElementById("kpiBalance").innerText = formatCurrency(summary.balanceLiability);
+            }
+
+            function renderBars(charts) {
+                const chartBarsContainer = document.getElementById("chartBars");
+                const chartLogElem = document.getElementById("chartLastUpdated");
+                if (chartLogElem) {
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false });
+                    const dateString = now.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+                    chartLogElem.innerText = `This chart is last updated at ${timeString} and ${dateString}.`;
+                }
+                if (!chartBarsContainer) return;
+                chartBarsContainer.innerHTML = "";
+                if (!charts || charts.length === 0) {
+                    chartBarsContainer.innerHTML = `<div style="width: 100%; text-align: center; color: var(--text-muted); padding-top: 40px;">No trend data found for the selected filters.</div>`;
+                    return;
+                }
+
+                const maxVal = Math.max(...charts.map((c) => Math.max(c.proposedBudget, c.approvedBudget, c.actualPayment)), 1);
+                charts.forEach((month) => {
+                    const proposedPct = (month.proposedBudget / maxVal) * 100;
+                    const approvedPct = (month.approvedBudget / maxVal) * 100;
+                    const actualPct = (month.actualPayment / maxVal) * 100;
+                    const barGroup = document.createElement("div");
+                    barGroup.className = "bar-group";
+                    barGroup.innerHTML = `
+                        <div class="bar-pair">
+                            <div class="bar bar-proposed" style="height: ${Math.max(proposedPct, 4)}%;" title="Proposed Budget: ${formatCurrency(month.proposedBudget)}"></div>
+                            <div class="bar bar-approved" style="height: ${Math.max(approvedPct, 4)}%;" title="Approved Budget: ${formatCurrency(month.approvedBudget)}"></div>
+                            <div class="bar bar-actual" style="height: ${Math.max(actualPct, 4)}%;" title="Actual Expenditure: ${formatCurrency(month.actualPayment)}"></div>
+                        </div>
+                        <span class="bar-label" style="position: static; margin-top: 4px;">${String(month.monthName || "").substring(0, 3)}</span>
+                    `;
+                    chartBarsContainer.appendChild(barGroup);
+                });
+            }
+
+            function renderPie(componentSummary) {
+                renderBudgetPie(componentSummary);
+                return;
+
+                const pieChart = document.querySelector(".modern-pie");
+                const legendContainer = document.querySelector(".pie-legends");
+                const centerValue = document.querySelector(".pie-center-value");
+                const rows = (componentSummary || [])
+                    .map((row) => [row.componentName || "Others", Number(row.proposedSum) || 0])
+                    .filter((row) => row[1] > 0);
+                const totalProposedSum = rows.reduce((sum, row) => sum + row[1], 0);
+                const formatPieAmount = (value) => {
+                    const amount = Number(value) || 0;
+                    if (amount >= 10000000) return `Rs ${(amount / 10000000).toFixed(2)}Cr`;
+                    if (amount >= 100000) return `Rs ${(amount / 100000).toFixed(2)}L`;
+                    if (amount >= 10000) return `Rs ${(amount / 1000).toFixed(2)}K`;
+                    return `Rs ${amount.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                };
+
+                if (centerValue) centerValue.innerText = formatPieAmount(totalProposedSum);
+                if (!pieChart) return;
+                if (!rows.length || totalProposedSum <= 0) {
+                    pieChart.style.background = "#e2e8f0";
+                    if (legendContainer) legendContainer.innerHTML = '<div style="font-size:0.8rem;color:var(--text-muted);">No allocation details found</div>';
+                    return;
+                }
+
+                let accumulatedPercent = 0;
+                const colors = ["#0F4CFF", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899", "#6B7280"];
+                const gradientParts = [];
+                if (legendContainer) legendContainer.innerHTML = "";
+
+                rows.forEach(([name, amount], index) => {
+                    const percent = (amount / totalProposedSum) * 100;
+                    const color = colors[index % colors.length];
+                    gradientParts.push(`${color} ${accumulatedPercent}% ${accumulatedPercent + percent}%`);
+                    accumulatedPercent += percent;
+                    if (legendContainer) {
+                        const legendItem = document.createElement("div");
+                        legendItem.className = "legend-item";
+                        legendItem.innerHTML = `
+                            <span class="legend-color" style="background-color: ${color};"></span>
+                            <span class="legend-name">${name} (${percent.toFixed(0)}%)</span>
+                        `;
+                        legendContainer.appendChild(legendItem);
+                    }
+                });
+                pieChart.style.background = `conic-gradient(${gradientParts.join(", ")})`;
+            }
+
+            function renderComponentTable(componentSummary) {
+                const compTableBody = document.getElementById("componentSummaryTableBody");
+                if (!compTableBody) return;
+                if (!componentSummary || componentSummary.length === 0) {
+                    compTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">No component allocations recorded for the selected filters.</td></tr>`;
+                    return;
+                }
+
+                compTableBody.innerHTML = "";
+                componentSummary.forEach((row) => {
+                    const proposed = Number(row.proposedSum) || 0;
+                    const approved = Number(row.approvedSum) || 0;
+                    const actual = Number(row.actualSum) || 0;
+                    const baseVal = approved > 0 ? approved : proposed;
+                    const pct = baseVal > 0 ? (actual / baseVal) * 100 : 0;
+                    let colorClass = "green";
+                    if (pct >= 90 && pct <= 100) colorClass = "yellow";
+                    else if (pct > 100) colorClass = "red";
+
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td><strong>${row.componentName}</strong></td>
+                        <td style="font-weight: 500;">${formatCurrency(proposed)}</td>
+                        <td style="font-weight: 500; color: ${approved > 0 ? "var(--primary)" : "var(--text-muted)"};">
+                            ${approved > 0 ? formatCurrency(approved) : "<em>Unapproved</em>"}
+                        </td>
+                        <td style="font-weight: 600; color: #10B981;">${formatCurrency(actual)}</td>
+                        <td>
+                            <div class="progress-bar-container">
+                                <div class="progress-track">
+                                    <div class="progress-fill ${colorClass}" style="width: ${Math.min(pct, 100)}%;"></div>
+                                </div>
+                                <span class="progress-percent ${colorClass === "red" ? "text-red" : ""}">${pct.toFixed(0)}%</span>
+                            </div>
+                        </td>
+                    `;
+                    compTableBody.appendChild(tr);
+                });
+            }
+
+            async function loadFilteredDashboard() {
+                const query = buildFilterQuery();
+                const statusElem = document.getElementById("filterStatus");
+                filterPanel.classList.add("filter-loading");
+                if (statusElem) {
+                    statusElem.classList.remove("error");
+                    statusElem.innerText = "Updating comparison...";
+                }
+
+                let data;
+                try {
+                    const response = await fetch(`${API_BASE}/api/dashboard/stats?${query}`);
+                    if (!response.ok) throw new Error("Unable to fetch filtered dashboard statistics");
+                    data = await response.json();
+                } catch (error) {
+                    if (statusElem) {
+                        statusElem.classList.add("error");
+                        statusElem.innerText = "Unable to update comparison.";
+                    }
+                    console.error(error);
+                    return;
+                } finally {
+                    filterPanel.classList.remove("filter-loading");
+                }
+
+                const greetingDate = document.getElementById("greeting-date");
+                if (greetingDate) {
+                const now = new Date();
+const hour = now.getHours();
+let greeting = hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
+
+greetingDate.innerText = `${greeting} | ${now.toLocaleDateString('en-GB', {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+})}`;
+                }
+                renderStatus(data.summary);
+                renderKpis(data.summary);
+                renderBars(data.charts);
+                renderPie(data.componentSummary);
+                renderComponentTable(data.componentSummary);
+                if (statusElem) {
+                    statusElem.classList.remove("error");
+                    statusElem.innerText = "Comparison updated.";
+                }
+            }
+
+            try {
+                filterPanel.classList.remove("hidden");
+                const response = await fetch(`${API_BASE}/api/dashboard/filter-options`);
+                if (!response.ok) throw new Error("Unable to fetch dashboard filter options");
+                filterOptions = await response.json();
+
+                const selectedQuarter = currentFinancialQuarter();
+                setSelectOptions(document.getElementById("filterYear"), filterOptions.financialYears, [currentFinancialYear()]);
+                setSelectOptions(document.getElementById("filterQuarter"), filterOptions.quarters, [selectedQuarter]);
+                updateMonthOptions();
+                Array.from(document.getElementById("filterMonth")?.querySelectorAll("input[type='checkbox']") || []).forEach((input) => {
+                    input.checked = input.value === String(new Date().getMonth());
+                });
+                updateMultiSelectLabel(document.getElementById("filterMonth"));
+                updateComponentOptions();
+
+                ["filterQuarter", "filterMonth", "filterComponent"].forEach((id) => {
+                    setupMultiSelect(document.getElementById(id));
+                });
+                document.addEventListener("click", (event) => {
+                    if (event.target.closest(".filter-multiselect")) return;
+                    document.querySelectorAll(".filter-multiselect.open").forEach((control) => {
+                        control.classList.remove("open");
+                        control.querySelector(".filter-multiselect-toggle")?.setAttribute("aria-expanded", "false");
+                    });
+                });
+                document.addEventListener("keydown", (event) => {
+                    if (event.key !== "Escape") return;
+                    document.querySelectorAll(".filter-multiselect.open").forEach((control) => {
+                        control.classList.remove("open");
+                        control.querySelector(".filter-multiselect-toggle")?.setAttribute("aria-expanded", "false");
+                    });
+                });
+                document.getElementById("filterYear")?.addEventListener("change", () => {
+                    updateComponentOptions();
+                    scheduleFilteredDashboardLoad();
+                });
+                document.getElementById("filterQuarter")?.addEventListener("change", () => {
+                    updateMonthOptions();
+                    scheduleFilteredDashboardLoad();
+                });
+                document.getElementById("filterMonth")?.addEventListener("change", () => {
+                    updateComponentOptions();
+                    scheduleFilteredDashboardLoad();
+                });
+                document.getElementById("filterComponent")?.addEventListener("change", scheduleFilteredDashboardLoad);
+                scheduleFilteredDashboardLoad();
+            } catch (error) {
+                console.error(error);
+            }
+        })();
+    </script>
+    <script>
+    const themeBtn = document.getElementById("themeToggle");
+    const body = document.body;
+    const icon = themeBtn.querySelector("i");
+    const text = themeBtn.querySelector(".toggle-text");
+
+    // 1. Page load hote hi saved theme check karein
+    const savedTheme = localStorage.getItem("theme");
+    if(savedTheme === "dark") {
+        body.classList.add("dark-mode");
+        icon.className = "fa-solid fa-sun";
+        text.innerText = "Light";
+    }
+
+    // 2. Button click par toggle karein
+    themeBtn.addEventListener("click", () => {
+        body.classList.toggle("dark-mode");
+
+        if(body.classList.contains("dark-mode")) {
+            // Dark mode activate hua
+            icon.className = "fa-solid fa-sun";
+            text.innerText = "Light";
+            localStorage.setItem("theme", "dark");
+        } else {
+            // Light mode activate hua
+            icon.className = "fa-solid fa-moon";
+            text.innerText = "Dark";
+            localStorage.setItem("theme", "light");
+        }
+    });
+</script>
+</body>
+</html>

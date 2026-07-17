@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="./style/datamanagement.css">
+    <link rel="stylesheet" href="./style/sidebar.css?v=1.2">
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-glass">
+                <img src="./Image/logo.png" alt="EMC Logo" class="sidebar-logo-img">
+            </div>
+            <h1 class="sidebar-logo-title">Budget Management</h1>
+            <p class="sidebar-logo-subtitle">Internal Finance Platform</p>
+        </div>
+        <div class="nav-links">
+            <a href="finance.html" class="nav-item">
+                <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span> Dashboard Core
+            </a>
+            <a href="datamanagement.html" class="nav-item active">
+                <span class="nav-icon"><i class="fa-solid fa-wallet"></i></span> Finance Hub
+            </a>
+            <div class="nav-sub-links" id="financeHubTabs">
+                <a href="masterdata.html" class="nav-sub-item active" data-tab-src="masterdata.html">Create Master Data</a>
+                <a href="viewdata.html" class="nav-sub-item" data-tab-src="viewdata.html">View Data</a>
+                <a href="reports.html" class="nav-sub-item" data-tab-src="reports.html">Report Generation</a>
+                <a href="usermanagement.html" class="nav-sub-item" data-tab-src="usermanagement.html">User Management</a>
+            </div>
+            <a href="#" class="nav-item">
+                <span class="nav-icon"><i class="fa-solid fa-gear"></i></span> System Settings
+            </a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="user-profile-section">
+                <div class="user-avatar" id="sidebarAvatar">U</div>
+                <div class="user-meta">
+                    <span class="user-name" id="sidebarUserName">Loading...</span>
+                    <span class="user-role-label" id="sidebarUserRole">Operator</span>
+                </div>
+            </div>
+            <button class="logout-btn" id="sidebarLogoutBtn">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Sign Out</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="wrapper">
+        
+     <header class="top-bar">
+            <div class="breadcrumb-container">
+                 <div class="profile-info">
+    <span id="welcomeLabel" class="user-role"></span>
+</div>
+                <div class="bc-date" id="greeting-date">Loading dashboard context...</div>
+            </div>
+       <div class="user-profile">
+
+ <button id="themeToggle" class="theme-toggle">
+    <span class="toggle-icon">
+        <i class="fa-solid fa-moon"></i>
+    </span>
+
+    <span class="toggle-text">
+        Dark
+    </span>
+</button>
+
+    <a href="index.html" class="avatar" id="userInitial">F</a>
+
+</div>
+        </header>
+
+        <div class="content-area">
+
+            <div class="tab-content-shell" id="tabContentShell">
+                <iframe id="tabContentFrame" src="about:blank" title="Pipeline Content"></iframe>
+            </div>
+
+        </div>
+           <footer class="sys-footer">
+            <div class="footer-segment">
+                <span>© Budget Management System</span>
+            </div>
+            <div class="footer-node">
+                <span id="time">--:--:--</span>
+                <span style="color: #b0c4de; margin-left: 10px;">| FINANCE-DASHBOARD</span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+   function updateTime(){
+    const now = new Date();
+    let h = String(now.getHours()).padStart(2,'0');
+    let m = String(now.getMinutes()).padStart(2,'0');
+    let s = String(now.getSeconds()).padStart(2,'0');
+
+    const timeEl = document.getElementById("time");
+    if(timeEl){
+        timeEl.innerText = `${h}:${m}:${s}`;
+    }
+
+    const dateEl = document.getElementById("todayDate");
+    if(dateEl){
+        dateEl.innerText =
+            now.toLocaleDateString('en-IN',{
+                day:'numeric',
+                month:'long',
+                year:'numeric'
+            }).toUpperCase();
+    }
+}
+
+// MISSING (MAIN FIX)
+updateTime();
+setInterval(updateTime, 1000);
+
+   function loadCalendar(){
+    const monthTitle = document.getElementById("monthTitle");
+    const calendar = document.getElementById("calendar");
+
+    // IMPORTANT: prevent crash if elements don't exist
+    if(!monthTitle || !calendar) return;
+
+    const now = new Date();
+    const month = now.getMonth();
+    const year = now.getFullYear();
+    const today = now.getDate();
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const days = new Date(year, month + 1, 0).getDate();
+
+    const months = [
+        "JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE",
+        "JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"
+    ];
+
+    monthTitle.innerText = `${months[month]} ${year}`;
+
+    let html = "";
+
+    for(let i = 0; i < firstDay; i++){
+        html += `<div></div>`;
+    }
+
+    for(let d = 1; d <= days; d++){
+        const isToday = (d === today);
+        html += `
+            <div style="
+                text-align:center;
+                font-size:10px;
+                padding:3px 0;
+                font-family:'JetBrains Mono', monospace;
+                ${isToday ? 'background:#0284c7;color:white;font-weight:600;border-radius:2px;' : 'color:#94a3b8;'}
+            ">
+                ${d}
+            </div>
+        `;
+    }
+
+    calendar.innerHTML = html;
+}
+    </script>
+
+    <script src="config.js"></script>
+    <script>
+    (function(){
+      const auth = JSON.parse(localStorage.getItem("financeAuth") || "null");
+      if(!auth || !auth.username || !auth.role){
+        window.location.replace("login.html");
+        return;
+      }
+
+      const role = auth.role;
+      const label = document.getElementById("welcomeLabel");
+      if(label){
+        label.innerHTML = ` Welcome, <strong>${role.toUpperCase()}</strong>`;
+      }
+      
+      const initialBox = document.getElementById("userInitial");
+      if(initialBox && auth.username) {
+          initialBox.innerText = auth.username.charAt(0).toUpperCase();
+      }
+
+      // Populate sidebar user profile
+      const nameElem = document.getElementById("sidebarUserName");
+      const roleElem = document.getElementById("sidebarUserRole");
+      const avatarElem = document.getElementById("sidebarAvatar");
+      if(nameElem && auth.username) {
+          nameElem.innerText = auth.fullName || auth.username;
+      }
+      if(roleElem && auth.role) {
+          roleElem.innerText = auth.role;
+      }
+      if(avatarElem && auth.username) {
+          avatarElem.innerText = auth.username.charAt(0).toUpperCase();
+      }
+
+      // Bind logout button
+      const logoutBtn = document.getElementById("sidebarLogoutBtn");
+      if(logoutBtn) {
+          logoutBtn.addEventListener("click", () => {
+              localStorage.removeItem("financeAuth");
+              window.location.href = "login.html";
+          });
+      }
+
+      const tabFrame = document.getElementById("tabContentFrame");
+      const financeHubTabs = document.querySelectorAll("#financeHubTabs .nav-sub-item");
+      const viewDataTab = document.querySelector('a.nav-sub-item[href="viewdata.html"]');
+
+      if (role === "Account Team") {
+        financeHubTabs.forEach((tab) => {
+          const isViewDataTab = tab.getAttribute("href") === "viewdata.html";
+          tab.classList.toggle("nav-role-hidden", !isViewDataTab);
+          tab.classList.toggle("active", isViewDataTab);
+        });
+      } else {
+        financeHubTabs.forEach((tab) => {
+          tab.classList.remove("nav-role-hidden");
+        });
+      }
+
+      if (typeof window.applyFinanceSidebarRoleVisibility === "function") {
+        window.applyFinanceSidebarRoleVisibility();
+      }
+
+      if (tabFrame) {
+        const requestedTab = new URLSearchParams(window.location.search).get("tab");
+        const openViewData = requestedTab === "viewdata" && role !== "Account Team";
+        tabFrame.src = role === "Account Team" || openViewData ? "viewdata.html" : "masterdata.html";
+        if (openViewData && viewDataTab) {
+          financeHubTabs.forEach((item) => item.classList.remove("active"));
+          viewDataTab.classList.add("active");
+        }
+        tabFrame.addEventListener("load", () => {
+          tabFrame.classList.remove("is-loading");
+        });
+      }
+
+      if (role !== "Account Team" && viewDataTab) {
+        viewDataTab.classList.remove("active");
+      }
+
+      financeHubTabs.forEach((tab) => {
+        tab.addEventListener("click", (event) => {
+          if (event.ctrlKey || event.metaKey || event.shiftKey || event.button !== 0) return;
+          event.preventDefault();
+
+          const targetSrc = tab.dataset.tabSrc || tab.getAttribute("href");
+          if (!targetSrc || !tabFrame) return;
+
+          financeHubTabs.forEach((item) => item.classList.remove("active"));
+          tab.classList.add("active");
+
+          if (tabFrame.getAttribute("src") === targetSrc) return;
+          tabFrame.classList.add("is-loading");
+          window.setTimeout(() => {
+            tabFrame.src = targetSrc;
+          }, 120);
+        });
+      });
+    })();
+    </script>
+     <script>
+        function updateGreetingAndDate() {
+            const now = new Date();
+            const hour = now.getHours();
+            let greeting = hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
+            let emoji = "";
+            
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            document.getElementById('greeting-date').innerText = `${emoji} ${greeting} | ${now.toLocaleDateString('en-GB', options)}`;
+        }
+        updateGreetingAndDate();
+    </script>
+    <script>
+const themeBtn = document.getElementById("themeToggle");
+const body = document.body;
+const icon = themeBtn.querySelector("i");
+const text = themeBtn.querySelector(".toggle-text");
+
+// Load saved theme
+const savedTheme = localStorage.getItem("theme");
+
+if(savedTheme === "dark"){
+    body.classList.add("dark-mode");
+    icon.className = "fa-solid fa-sun";
+    text.innerText = "Light";
+}
+
+themeBtn.addEventListener("click", () => {
+
+    body.classList.toggle("dark-mode");
+
+    if(body.classList.contains("dark-mode")){
+        icon.className = "fa-solid fa-sun";
+        text.innerText = "Light";
+        localStorage.setItem("theme","dark");
+    }else{
+        icon.className = "fa-solid fa-moon";
+        text.innerText = "Dark";
+        localStorage.setItem("theme","light");
+    }
+
+});
+</script>
+</body>
+</html>

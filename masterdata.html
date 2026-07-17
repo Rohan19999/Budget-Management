@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Management System</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="./style/masterdata.css">
+    <style>
+    .embedded .sidebar,
+    .embedded .top-bar,
+    .embedded .back-link-btn,
+    .embedded .breadcrumb-container,
+    .embedded .breadcrumb,
+    .embedded .bc-title,
+    .embedded .bc-date,
+    .embedded .sys-footer {
+        display: none !important;
+    }
+    .embedded .wrapper {
+        margin-left: 0 !important;
+    }
+    .embedded .content-area {
+        padding-top: 0 !important;
+    }
+    .embedded html,
+    .embedded body {
+        overflow-x: hidden !important;
+        overflow-y: scroll !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+    .embedded body::-webkit-scrollbar {
+        width: 0px !important;
+        height: 0px !important;
+        background: transparent !important;
+    }
+    .embedded body::-webkit-scrollbar-track {
+        background: transparent !important;
+        background: transparent !important;
+    }
+    .embedded *::-webkit-scrollbar-thumb {
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+    .embedded body { scrollbar-color: transparent transparent !important; }
+    </style>
+    <script>
+      if (window.self !== window.top) {
+        document.documentElement.classList.add('embedded');
+      }
+    </script>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-glass">
+                <img src="./Image/logo.png" alt="EMC Logo" class="sidebar-logo-img">
+            </div>
+            <h1 class="sidebar-logo-title">Budget Management</h1>
+            <p class="sidebar-logo-subtitle">Internal Finance Platform</p>
+        </div>
+        <div class="nav-links">
+            <a href="finance.html" class="nav-item">
+                <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span> Dashboard Core
+            </a>
+            <a href="datamanagement.html" class="nav-item active">
+                <span class="nav-icon"><i class="fa-solid fa-wallet"></i></span> Finance Hub
+            </a>
+            <div class="nav-sub-links">
+                <a href="masterdata.html" class="nav-sub-item active">Create Master Data</a>
+                <a href="viewdata.html" class="nav-sub-item">View Data</a>
+                <a href="reports.html" class="nav-sub-item">Report Generation</a>
+                <a href="usermanagement.html" class="nav-sub-item">User Management</a>
+            </div>
+            <a href="#" class="nav-item">
+                <span class="nav-icon"><i class="fa-solid fa-gear"></i></span> System Settings
+            </a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="user-profile-section">
+                <div class="user-avatar" id="sidebarAvatar">U</div>
+                <div class="user-meta">
+                    <span class="user-name" id="sidebarUserName">Loading...</span>
+                    <span class="user-role-label" id="sidebarUserRole">Operator</span>
+                </div>
+            </div>
+            <button class="logout-btn" id="sidebarLogoutBtn">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Sign Out</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="wrapper">
+        
+        <header class="top-bar">
+<div class="breadcrumb-container">
+    <div class="bc-title">Budget Management System</div>
+    <div class="bc-date" id="greeting-date"></div>
+</div>
+
+            
+            <div class="user-profile">
+                <div class="profile-info">
+                    <h2 id="welcomeLabel">Loading Operator...</h2>
+                    <div class="secure-session-indicator">
+                        <span class="pulse-dot"></span>
+                        <span class="profile-status">Secure Tunnel 01</span>
+                    </div>
+                </div>
+                <a href="index.html" class="avatar" id="userInitial" style="text-decoration: none;">F</a>
+            </div>
+        </header>
+
+        <div class="content-area">
+            
+            <div style="margin-bottom: 24px;">
+                <a href="datamanagement.html" class="back-link-btn">&larr; Back to Finance Hub</a>
+            </div>
+
+            <div class="section-title-block" style="margin-bottom: 32px;">
+                <h2> Create Master Data </h2>
+                
+            </div>
+
+            <div class="container-grid">
+                <div class="form-column">
+
+                    <div class="box active">
+                        <div class="box-header-static">
+                            <span> Month/Year</span>
+                            <span class="badge-tag">SYSTEM CALENDAR</span>
+                        </div>
+                      <div class="box-body">
+    <div class="row-two-columns">
+        
+        <div class="form-group">
+            <span class="field-label">Create Year</span>
+            <input type="text" id="year" class="input-field mono-text" readonly>
+        </div>
+
+        <div class="form-group">
+            <span class="field-label">Choose Month</span>
+            <select id="month" class="select-field">
+                <option>January</option> <option>February</option> <option>March</option>
+                <option>April</option> <option>May</option> <option>June</option>
+                <option>July</option> <option>August</option> <option>September</option>
+                <option>October</option> <option>November</option> <option>December</option>
+            </select>
+        </div>
+
+    </div>
+</div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-header" onclick="toggleBox(this)">
+                            <span>Import Excel</span>
+                            <span class="toggle-arrow">&#9660;</span>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <span class="field-label">Upload Document</span>
+                                <input type="file" id="excelUpload" class="input-field" accept=".xlsx,.xlsm">
+                            </div>
+                            <button class="btn btn-primary-action" onclick="importExcelMasterData()">Execute</button>
+                            <div id="importStatus" class="import-status muted-status">System idling. Awaiting document validation protocol...</div>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-header" onclick="toggleBox(this)">
+                            <span>Create Components</span>
+                            <span class="toggle-arrow">&#9660;</span>
+                        </div>
+                        <div class="box-body">
+                            <div id="componentArea">
+                                <div class="row node-row">
+                                    <span class="node-idx-label">Item ID</span>
+                                    <input type="text" value="1" class="small input-field mono-text" readonly>
+                                    <span class="node-input-label">Name Of The Component</span>
+                                    <input type="text" class="input-field flex-input" placeholder="e.g. Total Revenue Operation Assets">
+                                    <span class="icon-btn add-btn" onclick="addComponent()">+</span>
+                                </div>
+                            </div>
+                            <div class="action-bar-strip">
+                                <button class="btn btn-success-action" onclick="saveComponents()">Create Component </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-header" onclick="toggleBox(this)">
+                            <span>Create Sub-Component</span>
+                            <span class="toggle-arrow">&#9660;</span>
+                        </div>
+                        <div class="box-body">
+                            <div id="subArea">
+                                <div class="row" id="chooseRow">
+                                    <span class="field-label">Choose The Component</span>
+                                    <select id="componentDropdown" class="select-field"></select>
+                                </div>
+
+                                <div class="row node-row sub-row">
+                                    <span class="node-idx-label">Item ID</span>
+                                    <input type="text" value="1.1" class="small input-field mono-text" readonly>
+                                    <span class="node-input-label">Name Of The Sub-Component</span>
+                                    <textarea class="sub-text" placeholder="Enter continuous text metrics block details..."></textarea>
+                                    <div class="node-controls">
+                                        <span class="icon-btn add-btn" onclick="addSub()">+</span>
+                                        <span class="icon-btn remove-btn" onclick="removeSub(this)">-</span>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="action-bar-strip">
+                                <button class="btn btn-success-action" onclick="saveSubComponents()">Create Sub-Component </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+          <footer class="sys-footer">
+            <div class="footer-segment">
+                <span class="footer-indicator"></span>
+                <span>© Budget Management System</span>
+            </div>
+            <div class="footer-node">
+                <span id="time">--:--:--</span>
+                <span style="color: #b0c4de; margin-left: 10px;">| IN-NODE-01</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+    document.getElementById("year").value = new Date().getFullYear();
+    document.getElementById("month").selectedIndex = new Date().getMonth();
+
+    function toggleBox(el){
+        el.parentElement.classList.toggle("active");
+    }
+
+    let componentCount = 1;
+    let subCount = 1;
+    let components = [];
+    let savedComponents = [];
+    let savedSubComponents = [];
+    const API_BASE = "http://localhost:5050";
+
+    function addComponent(){
+        let div = document.createElement("div");
+        div.className = "row node-row";
+
+        div.innerHTML = `
+            <span class="node-idx-label">ID</span>
+            <input type="text" value="${componentCount + 1}" class="small input-field mono-text" readonly>
+            <span class="node-input-label">Component Field Name</span>
+            <input type="text" class="input-field flex-input">
+            <span class="icon-btn add-btn" onclick="addComponent()">+</span>
+            <span class="icon-btn remove-btn" onclick="removeRow(this)">-</span>
+        `;
+
+        document.getElementById("componentArea").appendChild(div);
+        componentCount = document.querySelectorAll("#componentArea > .row").length;
+        renumberComponentRows();
+    }
+
+    function renumberComponentRows(){
+        const rows = document.querySelectorAll("#componentArea > .row");
+        rows.forEach((row, index) => {
+            const itemInput = row.querySelector(".small");
+            if(itemInput){
+                itemInput.value = index + 1;
+            }
+        });
+        componentCount = rows.length;
+    }
+
+    function collectComponentRows(){
+        let inputs = document.querySelectorAll("#componentArea input[type='text']:not(.small)");
+        let componentRows = [];
+
+        inputs.forEach(i=>{
+            if(i.value.trim() !== ""){
+                let row = i.closest(".row");
+                let itemId = row.querySelector(".small").value;
+
+                componentRows.push({
+                    itemId: itemId,
+                    name: i.value.trim()
+                });
+            }
+        });
+
+        return componentRows;
+    }
+
+    function getSelectedPeriod(){
+        let month = document.getElementById("month");
+        return {
+            year: Number(document.getElementById("year").value),
+            monthIndex: month.selectedIndex,
+            monthName: month.options[month.selectedIndex].text
+        };
+    }
+
+    async function saveComponents(){
+        let componentRows = collectComponentRows();
+        let period = getSelectedPeriod();
+
+        if(componentRows.length === 0){
+            alert("Please enter at least one component.");
+            return;
+        }
+
+        try{
+            let response = await fetch(`${API_BASE}/api/components`, {
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({
+                    year: period.year,
+                    monthIndex: period.monthIndex,
+                    monthName: period.monthName,
+                    components: componentRows
+                })
+            });
+
+            if(!response.ok){
+                let error = await response.json();
+                throw new Error(error.error || "Unable to save components.");
+            }
+
+            savedComponents = await response.json();
+            components = savedComponents.slice();
+            updateDropdown();
+            alert("Components Saved in Database Node!");
+        }catch(error){
+            alert(error.message);
+        }
+    }
+
+    async function importExcelMasterData(){
+        let fileInput = document.getElementById("excelUpload");
+        let importStatus = document.getElementById("importStatus");
+        let period = getSelectedPeriod();
+
+        if(!fileInput.files || fileInput.files.length === 0){
+            alert("Please choose an Excel file first.");
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("excelFile", fileInput.files[0]);
+        formData.append("year", period.year);
+        formData.append("monthIndex", period.monthIndex);
+        formData.append("monthName", period.monthName);
+
+        importStatus.className = "import-status executing-status";
+        importStatus.innerText = "Processing dynamic ledger matrix stream data pipelines...";
+
+        try{
+            let response = await fetch(`${API_BASE}/api/import-excel`, {
+                method:"POST",
+                body:formData
+            });
+
+            if(!response.ok){
+                let error = await response.json();
+                throw new Error(error.error || "Unable to import Excel file.");
+            }
+
+            let result = await response.json();
+            savedComponents = result.components || [];
+            components = savedComponents.slice();
+            updateDropdown();
+
+            fileInput.value = "";
+            importStatus.className = "import-status success-status";
+            importStatus.innerText = `Imported ${result.importedComponents} components and ${result.importedSubComponents} sub-components for ${period.monthName} ${period.year}.`;
+        }catch(error){
+            importStatus.className = "import-status error-status";
+            importStatus.innerText = error.message;
+            alert(error.message);
+        }
+    }
+
+    function updateComponentsFromInputs(){
+        let typedComponents = collectComponentRows();
+        let unsavedComponents = typedComponents
+            .filter(component=>!savedComponents.some(c=>c.name === component.name))
+            .map(component=>{
+                return {
+                    id: "",
+                    itemId: component.itemId,
+                    name: component.name
+                };
+            });
+
+        components = savedComponents.concat(unsavedComponents);
+        updateDropdown();
+    }
+
+    function updateDropdown(){
+        let dropdown = document.getElementById("componentDropdown");
+        if(!dropdown) return;
+        let selectedComponent = dropdown.value;
+        dropdown.innerHTML = "<option value=''>Select Parent Component Class</option>";
+
+        components.forEach(c=>{
+            let option = document.createElement("option");
+            option.text = c.id ? c.name : `${c.name} [UNCOMMITTED]`;
+            option.value = c.id || "";
+            option.disabled = !c.id;
+            dropdown.add(option);
+        });
+
+        if(components.some(c=>String(c.id) === selectedComponent)){
+            dropdown.value = selectedComponent;
+        }
+
+        updateSubItemIds();
+    }
+
+    function getSelectedComponent(){
+        let componentId = document.getElementById("componentDropdown").value;
+        return components.find(c=>String(c.id) === componentId);
+    }
+
+    function getSubItemPrefix(){
+        let selectedComponent = getSelectedComponent();
+        return selectedComponent && selectedComponent.itemId ? selectedComponent.itemId : "1";
+    }
+
+    function getSubItemId(index){
+        return `${getSubItemPrefix()}.${index}`;
+    }
+
+    function updateSubItemIds(){
+        let rows = document.querySelectorAll("#subArea .sub-row");
+        rows.forEach((row, index)=>{
+            row.querySelector(".small").value = getSubItemId(index + 1);
+        });
+        subCount = rows.length;
+    }
+
+    async function loadComponents(period = getSelectedPeriod()){
+        try{
+            let response = await fetch(`${API_BASE}/api/components?year=${period.year}&monthIndex=${period.monthIndex}`);
+            if(!response.ok) throw new Error("Unable to load components from SQL.");
+            savedComponents = await response.json();
+            components = savedComponents.slice();
+            updateDropdown();
+        }catch(error){
+            console.warn(error.message);
+            savedComponents = [];
+            components = [];
+            updateDropdown();
+        }
+    }
+
+    async function loadSubComponents(period = getSelectedPeriod()){
+        try{
+            let response = await fetch(`${API_BASE}/api/sub-components?year=${period.year}&monthIndex=${period.monthIndex}`);
+            if(!response.ok) throw new Error("Unable to load sub-components from SQL.");
+            savedSubComponents = await response.json();
+        }catch(error){
+            console.warn(error.message);
+            savedSubComponents = [];
+        }
+    }
+
+    function addSub(){
+        subCount++;
+        let div = document.createElement("div");
+        div.className = "row node-row sub-row";
+
+        div.innerHTML = `
+            <span class="node-idx-label">ID</span>
+            <input type="text" value="${getSubItemId(subCount)}" class="small input-field mono-text" readonly>
+            <span class="node-input-label">Sub Component</span>
+            <textarea class="sub-text" placeholder="Enter continuous text metrics block details..."></textarea>
+            <div class="node-controls">
+                <span class="icon-btn add-btn" onclick="addSub()">+</span>
+                <span class="icon-btn remove-btn" onclick="removeSub(this)">-</span>
+            </div>
+        `;
+
+        document.getElementById("subArea").appendChild(div);
+        updateSubButtons();
+        updateSubItemIds();
+    }
+
+    function removeSub(btn){
+        btn.closest(".sub-row").remove();
+        updateSubButtons();
+        updateSubItemIds();
+    }
+
+    async function saveSubComponents(){
+        let componentId = document.getElementById("componentDropdown").value;
+        let period = getSelectedPeriod();
+        let rows = document.querySelectorAll("#subArea .sub-row");
+        let subComponents = [];
+
+        if(!componentId){
+            alert("Please choose a saved parent component class first.");
+            return;
+        }
+
+        rows.forEach(row=>{
+            let itemId = row.querySelector(".small").value;
+            let nameField = row.querySelector(".sub-text");
+
+            if(nameField && nameField.value.trim() !== ""){
+                subComponents.push({
+                    itemId: itemId,
+                    name: nameField.value.trim(),
+                    amountValue: 0
+                });
+            }
+        });
+
+        if(subComponents.length === 0){
+            alert("Please populate description values for at least one sub-component item.");
+            return;
+        }
+
+        try{
+            let response = await fetch(`${API_BASE}/api/sub-components`, {
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({
+                    componentId: componentId,
+                    year: period.year,
+                    monthIndex: period.monthIndex,
+                    monthName: period.monthName,
+                    subComponents: subComponents
+                })
+            });
+
+            if(!response.ok){
+                let error = await response.json();
+                throw new Error(error.error || "Unable to save sub-components.");
+            }
+
+            resetSubComponentForm();
+            alert("Sub-Components Tracked Successfully!");
+        }catch(error){
+            alert(error.message);
+        }
+    }
+
+    function resetSubComponentForm(){
+        let subArea = document.getElementById("subArea");
+        let chooseRow = document.getElementById("chooseRow");
+
+        subCount = 1;
+        document.getElementById("componentDropdown").value = "";
+        subArea.querySelectorAll(".sub-row").forEach(row=>row.remove());
+
+        let div = document.createElement("div");
+        div.className = "row node-row sub-row";
+
+        div.innerHTML = `
+            <span class="node-idx-label">ID</span>
+            <input type="text" value="1.1" class="small input-field mono-text" readonly>
+            <span class="node-input-label">Sub Component Description</span>
+            <textarea class="sub-text" placeholder="Enter continuous text metrics block details..."></textarea>
+            <div class="node-controls">
+                <span class="icon-btn add-btn" onclick="addSub()">+</span>
+                <span class="icon-btn remove-btn" onclick="removeSub(this)">-</span>
+            </div>
+        `;
+
+        chooseRow.insertAdjacentElement("afterend", div);
+        updateSubButtons();
+        updateSubItemIds();
+    }
+
+    function updateSubButtons(){
+        let rows = document.querySelectorAll(".sub-row");
+
+        rows.forEach((row) => {
+            let addBtn = row.querySelector(".add-btn");
+            let removeBtn = row.querySelector(".remove-btn");
+
+            if(addBtn) addBtn.style.display = "none";
+            if(removeBtn) removeBtn.style.display = "none";
+        });
+
+        if(rows.length === 0) return;
+
+        let last = rows[rows.length - 1];
+        if(last){
+            let addBtn = last.querySelector(".add-btn");
+            if(addBtn) addBtn.style.display = "inline-flex";
+        }
+
+        if(rows.length > 1){
+            rows.forEach((row) => {
+                let removeBtn = row.querySelector(".remove-btn");
+                if(removeBtn) removeBtn.style.display = "inline-flex";
+            });
+        }
+    }
+
+    function removeRow(btn){
+        btn.parentElement.remove();
+        renumberComponentRows();
+        updateComponentsFromInputs();
+    }
+
+    document.getElementById("componentArea").addEventListener("input", updateComponentsFromInputs);
+    document.getElementById("componentDropdown").addEventListener("change", updateSubItemIds);
+    document.getElementById("month").addEventListener("change", () => {
+        updateDropdown();
+        loadComponents();
+        loadSubComponents();
+    });
+    document.getElementById("year").addEventListener("change", () => {
+        updateDropdown();
+        loadComponents();
+        loadSubComponents();
+    });
+
+    updateDropdown();
+    updateSubButtons();
+    loadComponents();
+    loadSubComponents();
+    </script>
+
+    <script>
+   function updateTime(){
+    const now = new Date();
+    let h = now.getHours();
+    let m = now.getMinutes();
+    let s = now.getSeconds();
+
+    h = h < 10 ? "0"+h : h;
+    m = m < 10 ? "0"+m : m;
+    s = s < 10 ? "0"+s : s;
+
+    const timeEl = document.getElementById("time");
+    if (timeEl) {
+        timeEl.innerText = h + ":" + m + ":" + s;
+    }
+
+    const dateEl = document.getElementById("todayDate");
+    if (dateEl) {
+        const options = { day:'numeric', month:'short', year:'numeric' };
+        dateEl.innerText = now.toLocaleDateString('en-IN', options).toUpperCase();
+    }
+}
+   
+    </script>
+    <script>
+    function updateGreetingAndDate() {
+        const now = new Date();
+        const hour = now.getHours();
+        
+        let greeting = "";
+
+        if (hour < 12) {
+            greeting = "Good Morning";
+            emoji = "";
+        } else if (hour < 17) {
+            greeting = "Good Afternoon";
+            
+        } else {
+            greeting = "Good Evening";
+            
+        }
+
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        const dateString = now.toLocaleDateString('en-GB', options);
+
+        document.getElementById('greeting-date').innerText = `${emoji} ${greeting} | ${dateString}`;
+    }
+
+    updateGreetingAndDate();
+    
+</script>
+    <script>
+    (function(){
+        const auth = JSON.parse(localStorage.getItem("financeAuth") || "null");
+        if(!auth || !auth.username || !auth.role){
+            window.location.replace("login.html");
+            return;
+        }
+    })();
+    </script>
+</body>
+</html>

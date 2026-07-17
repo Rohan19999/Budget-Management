@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Management System</title>
+    
+    <!-- FONTS & ICONS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- EXTERNAL CSS -->
+    <link rel="stylesheet" href="./style/usermanagement.css">
+    <style>
+    .embedded .sidebar,
+    .embedded .top-bar,
+    .embedded .back-link-btn,
+    .embedded .breadcrumb,
+    .embedded .breadcrumb-container,
+    .embedded .sys-footer {
+        display: none !important;
+    }
+    .embedded .wrapper {
+        margin-left: 0 !important;
+    }
+    .embedded .content-area {
+        padding-top: 0 !important;
+    }
+    .embedded html,
+    .embedded body {
+        overflow-x: hidden !important;
+        overflow-y: scroll !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+    .embedded body::-webkit-scrollbar {
+        width: 0px !important;
+        height: 0px !important;
+        background: transparent !important;
+    }
+    .embedded body::-webkit-scrollbar-track {
+        background: transparent !important;
+    }
+    .embedded body::-webkit-scrollbar-thumb {
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+    .embedded *::-webkit-scrollbar {
+        width: 0px !important;
+        background: transparent !important;
+    }
+    .embedded *::-webkit-scrollbar-thumb {
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+    .embedded body { scrollbar-color: transparent transparent !important; }
+    </style>
+    <script>
+      if (window.self !== window.top) {
+        document.documentElement.classList.add('embedded');
+      }
+    </script>
+</head>
+<body>
+
+    <!-- SIDEBAR (FINANCE PAGE TRADITIONAL NAV) -->
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">E</div>
+            <span>Budget Management <span class="logo-sub">System</span></span>
+        </div>
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon"></span> Dashboard Core
+        </a>
+        <a href="datamanagement.html" class="nav-item">
+            <span class="nav-icon"></span> Finance Hub
+        </a>
+        <div class="nav-sub-links">
+            <a href="masterdata.html" class="nav-sub-item">Create Master Data</a>
+            <a href="viewdata.html" class="nav-sub-item">View Data</a>
+            <a href="reports.html" class="nav-sub-item">Report Generation</a>
+            <a href="usermanagement.html" class="nav-sub-item active">User Management</a>
+        </div>
+        <!-- <a href="#" class="nav-item">
+            <span class="nav-icon"></span> Vendor Matrix
+        </a> -->
+        <a href="#" class="nav-item active">
+            <span class="nav-icon"></span> System Settings
+        </a>
+    </nav>
+
+    <!-- MAIN WRAPPER LAYER -->
+    <div class="wrapper">
+        
+        <!-- TOP HIGH-STATUS BAR -->
+        <header class="top-bar">
+            <div class="breadcrumb">
+                <span class="bc-muted">Workspace / Console Settings /</span> 
+                <strong class="bc-active">User Management</strong>
+            </div>
+            
+            <div class="user-profile">
+                <div class="profile-info">
+                    <h2 id="welcomeLabel">Welcome Panel</h2>
+                    <div class="secure-session-indicator">
+                        <span class="pulse-dot"></span>
+                        <span class="profile-status">Secure Connection Verified</span>
+                    </div>
+                </div>
+                <div class="avatar">L</div>
+            </div>
+        </header>
+
+        <!-- CONTENT AREA -->
+        <div class="content-area">
+            
+            <div style="margin-bottom: 20px;">
+                <a href="datamanagement.html" class="back-link-btn">&larr; Back to Finance Hub</a>
+            </div>
+
+            <div class="title-block">
+                <h2>User Management System</h2>
+                
+            </div>
+
+            <!-- CONTAINER CARD WRAPPER -->
+            <div class="container-grid">
+                <div class="form-card">
+
+                    <!-- REGULAR PROFILE FIELD ROW -->
+                    <div class="row row-inline">
+                        <label class="field-label">Name of the User</label>
+                        <div class="input-wrapper">
+                            <input id="fullName" type="text" class="input-field" placeholder="Enter full name">
+                        </div>
+                    </div>
+
+                    <div class="row row-inline">
+                        <label class="field-label">Emp ID</label>
+                        <div class="input-wrapper">
+                            <input id="employeeId" type="text" class="input-field mono-text" placeholder="Enter employee ID">
+                        </div>
+                    </div>
+
+                    <!-- IDENTITY CRYPT SECURE BOX -->
+                    <div class="secure-box">
+                        <div class="secure-box-header">
+                            <span>Identity Security Crypt</span>
+                            <span class="badge-tag">ENCRYPTED</span>
+                        </div>
+                        
+                        <div class="row row-inline">
+                            <label class="field-label">Email ID</label>
+                            <div class="input-wrapper">
+                                <input id="email" type="email" class="input-field" placeholder="Enter email">
+                            </div>
+                        </div>
+
+                        <div class="row row-inline">
+                            <label class="field-label">Temporary P/W</label>
+                            <div class="input-wrapper pass-field-container">
+                                <input type="password" id="password" class="input-field" placeholder="Enter password">
+                                <i class="fa-solid fa-eye-slash eye-icon" id="eyeIcon" onclick="togglePassword()"></i>
+                            </div>
+                        </div>
+
+                        <div class="error-strip" id="errorMsg"></div>
+                    </div>
+
+                    <!-- FOOT METADATA FIELDS -->
+                    <div class="row row-inline">
+                        <label class="field-label">Role</label>
+                        <div class="input-wrapper">
+                            <select id="role" class="select-field">
+                                <option value="">Select Role</option>
+                                <option value="Admin(CEO)">Admin(CEO)</option>
+                                <option value="Finance Admin">Finance Admin</option>
+                                <option value="Account Team">Account Team</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row row-inline">
+                        <label class="field-label">Designation</label>
+                        <div class="input-wrapper">
+                            <input id="designation" type="text" class="input-field" placeholder="Enter designation">
+                        </div>
+                    </div>
+
+                    <!-- SUBMIT TRIGGER BUTTON CONTAINER -->
+                    <div class="action-bar-strip">
+                        <button class="btn-submit" onclick="validatePassword()">Create User</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- FIXED RUNTIME SYSTEM FOOTER -->
+          <footer class="sys-footer">
+            <div class="footer-segment">
+                <span class="footer-indicator"></span>
+                <span>© Budget Management System</span>
+            </div>
+            <div class="footer-node">
+                <span id="time">--:--:--</span>
+                <span style="color: #b0c4de; margin-left: 10px;">| IN-NODE-01</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- CORE LOGIC ENGINE SCRIPTS -->
+    <script src="config.js"></script>
+    <script>
+    // SECURITY CORE GATEWAY VERIFICATION
+    (function () {
+    const auth = JSON.parse(localStorage.getItem("financeAuth") || "null");
+
+    if (!auth || !auth.username || !auth.role) {
+        window.location.replace("login.html");
+        return;
+    }
+    if (auth.role !== "Finance Admin") {
+        window.location.replace("datamanagement.html");
+        return;
+    }
+})();
+    function togglePassword(){
+
+        let pass = document.getElementById("password");
+        let icon = document.getElementById("eyeIcon");
+
+        if(pass.type === "password"){
+            pass.type = "text";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        } else {
+            pass.type = "password";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        }
+    }
+
+    async function validatePassword(){
+        let pass = document.getElementById("password").value;
+        let error = document.getElementById("errorMsg");
+        let regex = /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{6,}$/;
+        const API_BASE = window.FINANCE_API_BASE || "http://localhost:3000";
+
+        if(!regex.test(pass)){
+            error.innerText = "Must have 1 Capital, 1 Special & 6+ characters";
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}/api/users`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    username: document.getElementById("employeeId").value.trim().toLowerCase(),
+                    password: pass,
+                    role: document.getElementById("role").value,
+                    fullName: document.getElementById("fullName").value.trim(),
+                    employeeId: document.getElementById("employeeId").value.trim(),
+                    email: document.getElementById("email").value.trim(),
+                    designation: document.getElementById("designation").value.trim()
+                })
+            });
+
+            const result = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                throw new Error(result.error || "Unable to create user.");
+            }
+
+            error.innerText = "";
+            alert(result.message || "User Created Successfully");
+        } catch (error) {
+            error.innerText = error.message;
+        }
+    }
+
+    // CLOCK TIMING CONTROLLER
+    function updateTime(){
+        const now = new Date();
+        let h = now.getHours();
+        let m = now.getMinutes();
+        let s = now.getSeconds();
+
+        h = h < 10 ? "0"+h : h;
+        m = m < 10 ? "0"+m : m;
+        s = s < 10 ? "0"+s : s;
+
+        document.getElementById("time").innerText = h+":"+m+":"+s;
+    }
+    setInterval(updateTime,1000);
+    updateTime();
+    </script>
+</body>
+</html>

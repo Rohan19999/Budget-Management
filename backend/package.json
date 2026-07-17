@@ -1,0 +1,16 @@
+{
+  "name": "finance-masterdata-api",
+  "version": "1.0.0",
+  "description": "Backend API for Finance master data SQL storage",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "exceljs": "^3.4.0",
+    "express": "^4.19.2",
+    "multer": "^2.0.2",
+    "sqlite3": "^6.0.1"
+  }
+}

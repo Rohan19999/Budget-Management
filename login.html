@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMC Budget Management System - Secure Login</title>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #0F4CFF; /* Enterprise Royal Blue */
+            --primary-hover: #003CBF;
+            --primary-rgb: 15, 76, 255;
+            --text: #0F172A; /* Slate 900 */
+            --text-muted: #64748B; /* Slate 500 */
+            --bg-light: #F8FAFC; /* Slate 50 */
+            --bg-white: #FFFFFF;
+            --border: #E2E8F0; /* Slate 200 */
+            --error: #E11D48; /* Rose 600 */
+            --error-bg: #FFF1F2; /* Rose 50 */
+            --success: #10B981; /* Emerald 500 */
+            --font: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+            
+            /* Dark theme vars for branding side */
+            --dark-bg: #070A13; 
+            --dark-text: #F1F5F9;
+            --dark-text-muted: #94A3B8;
+            --dark-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font);
+            background-color: var(--bg-light);
+            color: var(--text);
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .page-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--bg-white);
+        }
+
+        /* LEFT SIDE: Premium Corporate Branding Panel (Dark Theme) */
+        .branding-panel {
+            flex: 1.1;
+            background-color: var(--dark-bg);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(15, 76, 255, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.1) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(99, 102, 241, 0.1) 0px, transparent 50%);
+            border-right: 1px solid var(--dark-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Ambient rotating mesh/glow waves */
+        .mesh-gradient-wave {
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(100px);
+        }
+        .wave-1 {
+            top: -200px;
+            left: -200px;
+            background: radial-gradient(circle, rgba(15, 76, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            animation: rotateWave 45s infinite linear;
+        }
+        .wave-2 {
+            bottom: -300px;
+            right: -200px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+            animation: rotateWave 60s infinite linear reverse;
+        }
+
+        @keyframes rotateWave {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Subtle Radial Light Glowing Slowly Across Background */
+        .light-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(140px);
+            opacity: 0.35;
+            animation: slowGlowMove 20s infinite alternate ease-in-out;
+        }
+        .glow-top-left {
+            top: -150px;
+            left: -150px;
+            background: radial-gradient(circle, rgba(15, 76, 255, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+        }
+        .glow-bottom-right {
+            bottom: -200px;
+            right: -100px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.18) 0%, rgba(255, 255, 255, 0) 70%);
+            animation-delay: -5s;
+        }
+
+        @keyframes slowGlowMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Ambient Blobs (Slow Animation) */
+        .ambient-blob {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(90px);
+            opacity: 0.16;
+            animation: slowFloat 30s infinite alternate ease-in-out;
+        }
+        .blob-blue {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(15, 76, 255, 0.3) 0%, rgba(255, 255, 255, 0) 80%);
+            top: 5%;
+            left: -10%;
+        }
+        .blob-cyan {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, rgba(255, 255, 255, 0) 80%);
+            bottom: 8%;
+            right: -8%;
+            animation-delay: -6s;
+            animation-duration: 35s;
+        }
+
+        @keyframes slowFloat {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            50% { transform: translate(30px, -15px) scale(1.04) rotate(180deg); }
+            100% { transform: translate(-15px, 20px) scale(0.96) rotate(360deg); }
+        }
+
+        /* SVG Blueprint Watermark Grid */
+        .tech-watermark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.45;
+        }
+        .tech-watermark svg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Floating outline corporate finance artworks - 7% Opacity with 0.4px Blur */
+        .floating-artwork {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.07);
+            filter: blur(0.4px);
+            pointer-events: none;
+            z-index: 2;
+        }
+        .floating-artwork svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Clean animations reflecting Apple's understated motions */
+        .art-rupee {
+            width: 46px;
+            height: 46px;
+            animation: rupeeFloat 16s infinite alternate ease-in-out;
+        }
+        .art-calc {
+            width: 52px;
+            height: 52px;
+            animation: calcDrift 20s infinite alternate ease-in-out;
+        }
+        .art-wallet {
+            width: 50px;
+            height: 50px;
+            animation: walletDrift 18s infinite alternate ease-in-out;
+        }
+        .art-pie {
+            width: 44px;
+            height: 44px;
+            animation: rupeeFloat 22s infinite alternate ease-in-out;
+            animation-delay: -4s;
+        }
+        .art-bar {
+            width: 46px;
+            height: 46px;
+            animation: calcDrift 16s infinite alternate ease-in-out;
+            animation-delay: -2s;
+        }
+        .art-trend {
+            width: 60px;
+            height: 60px;
+            animation: trendFade 24s infinite alternate ease-in-out;
+        }
+        .art-doc {
+            width: 40px;
+            height: 40px;
+            animation: docRotate 14s infinite alternate ease-in-out;
+        }
+        .art-coins {
+            width: 48px;
+            height: 48px;
+            animation: coinsDrift 18s infinite alternate ease-in-out;
+        }
+
+        @keyframes rupeeFloat {
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-15px) scale(1.02); }
+            100% { transform: translateY(0) scale(1); }
+        }
+        @keyframes calcDrift {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(10px, -10px) scale(1.02); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+        @keyframes walletDrift {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(-10px, -6px); }
+            100% { transform: translate(0, 0); }
+        }
+        @keyframes trendFade {
+            0% { opacity: 0.3; transform: translate(0, 0); }
+            50% { opacity: 0.9; transform: translate(6px, -6px); }
+            100% { opacity: 0.3; transform: translate(0, 0); }
+        }
+        @keyframes docRotate {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(2deg) translateY(-8px); }
+            100% { transform: rotate(-1deg) translateY(0); }
+        }
+        @keyframes coinsDrift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-8px, 6px) rotate(1deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        /* Frosted Glassmorphism Floating Shapes */
+        .glass-shape {
+            position: absolute;
+            pointer-events: none;
+            z-index: 3;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        
+        /* Reduced Size by 20% (width 240px, height 136px) and Integrated Gradient Backdrop */
+        .glass-1 {
+            width: 240px;
+            height: 136px;
+            top: 15%;
+            right: -40px;
+            border-radius: 32px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+            animation: drift1 24s infinite alternate ease-in-out;
+        }
+        .glass-1::before {
+            content: '';
+            position: absolute;
+            top: -15%;
+            left: -15%;
+            width: 130%;
+            height: 130%;
+            background: radial-gradient(circle, rgba(15, 76, 255, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+            filter: blur(18px);
+            z-index: -1;
+        }
+
+        .glass-2 {
+            width: 220px;
+            height: 220px;
+            bottom: 10%;
+            left: -50px;
+            border-radius: 50% 30% 50% 30%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.005) 100%);
+            animation: drift2 26s infinite alternate ease-in-out;
+            animation-delay: -3s;
+        }
+
+        @keyframes drift1 {
+            0% { transform: translateY(0) rotate(-12deg); }
+            50% { transform: translateY(-10px) rotate(-9deg); }
+            100% { transform: translateY(5px) rotate(-15deg); }
+        }
+        @keyframes drift2 {
+            0% { transform: translateY(0) rotate(15deg); }
+            50% { transform: translateY(-12px) rotate(18deg); }
+            100% { transform: translateY(6px) rotate(12deg); }
+        }
+
+        /* Very faint animated line chart in background */
+        .background-chart-line {
+            position: absolute;
+            top: 55%;
+            left: 5%;
+            width: 90%;
+            height: auto;
+            z-index: 3;
+            pointer-events: none;
+            opacity: 0.25;
+        }
+        .animated-path, .animated-path-glow {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawChartLine 16s infinite ease-in-out alternate;
+        }
+        @keyframes drawChartLine {
+            0% { stroke-dashoffset: 1000; }
+            100% { stroke-dashoffset: 0; }
+        }
+        .chart-node {
+            animation: pulseNode 3s infinite alternate ease-in-out;
+            opacity: 0.5;
+        }
+        .node-1 { animation-delay: 0.5s; }
+        .node-2 { animation-delay: 1.5s; }
+        .node-3 { animation-delay: 2.5s; }
+        
+        @keyframes pulseNode {
+            0% { r: 2px; opacity: 0.3; }
+            100% { r: 4px; opacity: 0.7; }
+        }
+
+        .branding-content {
+            max-width: 480px;
+            z-index: 4;
+            position: relative;
+        }
+
+        /* Very soft radial brand-blue glow behind title & logo */
+        .branding-content::before {
+            content: '';
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, rgba(15, 76, 255, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: -1;
+            top: 40%;
+            left: 30%;
+            transform: translate(-50%, -50%);
+            filter: blur(50px);
+            pointer-events: none;
+        }
+
+        /* Logo Capsule Container */
+        .brand-logo-glass-box {
+            width: 140px;
+            height: 72px;
+            margin-bottom: 2.75rem; /* Increased spacing */
+            padding: 14px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .brand-logo-glass-box::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(15, 76, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: -1;
+            top: -25%;
+            left: -25%;
+            filter: blur(12px);
+            pointer-events: none;
+        }
+
+        .brand-logo {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .company-name {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #38BDF8; /* Sky Blue */
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.85rem; /* Increased spacing */
+        }
+
+        .app-title {
+            font-size: 2.15rem; /* Downsized */
+            font-weight: 800;
+            color: var(--dark-text);
+            line-height: 1.25;
+            margin-bottom: 1.25rem; /* Increased spacing */
+            letter-spacing: -0.5px;
+        }
+
+        .app-tagline {
+            font-size: 0.95rem;
+            color: var(--dark-text-muted);
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        /* RIGHT SIDE: Centered Authentication Panel (Light Theme) */
+        .login-panel {
+            flex: 0.9;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.5rem 3rem;
+            background-color: var(--bg-light);
+            position: relative;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Premium Form Card Container with Increased Radius & Soft Shadow */
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background-color: var(--bg-white);
+            border: 1px solid rgba(15, 23, 42, 0.04); /* Reduced border visibility */
+            border-radius: 20px; /* Increased border radius */
+            padding: 2.25rem;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.04), 0 0 1px 1px rgba(15, 23, 42, 0.02); /* Softer shadow */
+            margin: auto 0;
+        }
+
+        .login-card-header {
+            margin-bottom: 1.75rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.5px;
+            margin-bottom: 0.35rem;
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Form Styling */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .field-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: 0.1px;
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .field-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: color 0.3s ease;
+            z-index: 2;
+        }
+
+        .field-input-wrapper input,
+        .field-input-wrapper select {
+            width: 100%;
+            height: 44px;
+            padding: 0 16px 0 40px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-family: var(--font);
+            font-size: 0.9rem;
+            color: var(--text);
+            background-color: var(--bg-white);
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            z-index: 1;
+        }
+
+        .field-input-wrapper select {
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        .chevron-icon {
+            position: absolute;
+            right: 14px;
+            width: 14px;
+            height: 14px;
+            color: var(--text-muted);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .field-input-wrapper input::placeholder {
+            color: #94A3B8;
+        }
+
+        .field-input-wrapper input:focus,
+        .field-input-wrapper select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.08);
+        }
+
+        .field-input-wrapper input:focus ~ .input-icon,
+        .field-input-wrapper select:focus ~ .input-icon {
+            color: var(--primary);
+        }
+
+        /* Password Toggle and warnings */
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            outline: none;
+            transition: color 0.2s ease;
+            z-index: 2;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary);
+        }
+
+        .password-toggle i {
+            width: 16px;
+            height: 16px;
+        }
+
+        .caps-lock-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #D97706; /* Amber 600 */
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+
+        .caps-lock-badge i {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Form options (Remember me & Forgot Password) */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.15rem;
+            margin-bottom: 0.15rem;
+        }
+
+        .remember-me-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .remember-me-label input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .checkbox-indicator {
+            width: 15px;
+            height: 15px;
+            border: 1.5px solid var(--border);
+            border-radius: 4px;
+            background: var(--bg-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .remember-me-label input[type="checkbox"]:checked ~ .checkbox-indicator {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .checkbox-indicator::after {
+            content: '';
+            width: 3.5px;
+            height: 7px;
+            border: solid white;
+            border-width: 0 1.8px 1.8px 0;
+            transform: rotate(45deg);
+            display: none;
+            margin-top: -2px;
+        }
+
+        .remember-me-label input[type="checkbox"]:checked ~ .checkbox-indicator::after {
+            display: block;
+        }
+
+        .forgot-link {
+            font-size: 0.82rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Error message design */
+        .error-message-area {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--error);
+            text-align: center;
+            min-height: 24px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background-color 0.2s ease;
+        }
+
+        .error-message-area:not(:empty) {
+            background-color: var(--error-bg);
+            border: 1px solid rgba(225, 29, 72, 0.1);
+        }
+
+        /* Submit Action Button */
+        .signin-button {
+            width: 100%;
+            height: 44px;
+            background-color: var(--primary);
+            border: none;
+            border-radius: 8px;
+            color: var(--bg-white);
+            font-family: var(--font);
+            font-weight: 700;
+            font-size: 0.92rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.15);
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+        }
+
+        .signin-button:hover {
+            background-color: var(--primary-hover);
+            box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.25);
+        }
+
+        .signin-button:active {
+            transform: scale(0.99);
+        }
+
+        .signin-button:disabled {
+            background-color: #CBD5E1;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .arrow-icon {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.2s ease;
+        }
+
+        .signin-button:hover .arrow-icon {
+            transform: translateX(3px);
+        }
+
+        /* Spinner */
+        .btn-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--bg-white);
+            animation: spin 0.8s infinite linear;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Enterprise Footer */
+        .portal-footer {
+            text-align: center;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            width: 100%;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .portal-footer .security-text {
+            margin-top: 0.2;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            body {
+                overflow-y: auto;
+                height: auto;
+            }
+            .page-container {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+            }
+            .branding-panel {
+                flex: none;
+                padding: 4rem 2rem;
+                align-items: center;
+                text-align: center;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+            .brand-logo-glass-box {
+                margin-left: auto;
+                margin-right: auto;
+                justify-content: center;
+            }
+            .login-panel {
+                flex: 1;
+                padding: 4rem 2rem;
+                justify-content: center;
+                gap: 2.5rem;
+                height: auto;
+            }
+            .login-card {
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .app-title {
+                font-size: 1.8rem;
+            }
+            .login-card {
+                padding: 1.5rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-container">
+        
+        <!-- Left Side: Professional Branding (Dark Theme Mesh/Glow) -->
+        <div class="branding-panel">
+            <!-- Ambient waves/mesh radial highlights -->
+            <div class="mesh-gradient-wave wave-1"></div>
+            <div class="mesh-gradient-wave wave-2"></div>
+            <div class="light-glow glow-top-left"></div>
+            <div class="light-glow glow-bottom-right"></div>
+            <div class="ambient-blob blob-blue"></div>
+            <div class="ambient-blob blob-cyan"></div>
+            
+            <div class="tech-watermark">
+                <svg width="100%" height="100%" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="400" cy="400" r="180" stroke="rgba(255, 255, 255, 0.012)" stroke-width="1.2" stroke-dasharray="10 5" />
+                    <circle cx="400" cy="400" r="290" stroke="rgba(255, 255, 255, 0.008)" stroke-width="1.2" />
+                    <circle cx="400" cy="400" r="390" stroke="rgba(255, 255, 255, 0.006)" stroke-width="1" stroke-dasharray="6 6" />
+                </svg>
+            </div>
+            
+            <!-- Very faint animated line chart in background -->
+            <div class="background-chart-line">
+                <svg width="600" height="200" viewBox="0 0 600 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Baseline -->
+                    <path d="M 0 150 Q 150 150 300 150 T 600 150" stroke="rgba(255, 255, 255, 0.015)" stroke-width="1" />
+                    <!-- Animated graph lines -->
+                    <path class="animated-path" d="M 0 160 Q 100 120 200 150 T 400 90 T 600 110" stroke="rgba(15, 76, 255, 0.16)" stroke-width="1.5" />
+                    <path class="animated-path-glow" d="M 0 160 Q 100 120 200 150 T 400 90 T 600 110" stroke="rgba(15, 76, 255, 0.3)" stroke-width="3" style="filter: blur(2px);" />
+                    
+                    <!-- Nodes -->
+                    <circle cx="200" cy="150" r="3" fill="#0F4CFF" class="chart-node node-1" />
+                    <circle cx="400" cy="90" r="3" fill="#0F4CFF" class="chart-node node-2" />
+                    <circle cx="600" cy="110" r="3" fill="#0F4CFF" class="chart-node node-3" />
+                </svg>
+            </div>
+            
+            <!-- Floating Finance SVGs (Fluent outlines, 7% opacity with slight blur) -->
+            <!-- Rupee Symbol -->
+            <div class="floating-artwork art-rupee" style="top: 12%; left: 14%;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 3h12M6 8h12M6 8a5 5 0 015 5h1M6 13h5a5 5 0 01-5 5M9 13l6 8" />
+                </svg>
+            </div>
+            <!-- Calculator -->
+            <div class="floating-artwork art-calc" style="top: 24%; right: 18%;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="4" y="2" width="16" height="20" rx="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <line x1="8" y1="6" x2="16" y2="6" stroke-linecap="round" stroke-linejoin="round" />
+                    <line x1="8" y1="10" x2="16" y2="10" stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="8" cy="14" r="1" />
+                    <circle cx="12" cy="14" r="1" />
+                    <circle cx="16" cy="14" r="1" />
+                    <circle cx="8" cy="18" r="1" />
+                    <circle cx="12" cy="18" r="1" />
+                    <circle cx="16" cy="18" r="1" />
+                </svg>
+            </div>
+            <!-- Wallet -->
+            <div class="floating-artwork art-wallet" style="bottom: 24%; left: 16%;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 12V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-4z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 12h-4a2 2 0 000 4h4" />
+                </svg>
+            </div>
+            <!-- Pie Chart -->
+            <div class="floating-artwork art-pie" style="top: 55%; left: 8%;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.21 15.89A10 10 0 118 2.83M22 12A10 10 0 0012 2v10z" />
+                </svg>
+            </div>
+            <!-- Bar Chart -->
+            <div class="floating-artwork art-bar" style="top: 72%; right: 28%;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M18 20V10M12 20V4M6 20v-6" />
+                </svg>
+            </div>
+            <!-- Trend Line/Graph -->
+            <div class="floating-artwork art-trend" style="top: 45%; right: 8%;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M22 7L13.5 15.5L8.5 10.5L2 17M22 7H16M22 7V13" />
+                </svg>
+            </div>
+            <!-- Invoice Document -->
+            <div class="floating-artwork art-doc" style="bottom: 12%; right: 10%;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
+                </svg>
+            </div>
+            <!-- Coins Stack -->
+            <div class="floating-artwork art-coins" style="top: 8%; right: 35%;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <ellipse cx="12" cy="5" rx="9" ry="3" />
+                    <path d="M3 5v6c0 1.66 4 3 9 3s9-1.34 9-3V5M3 11v6c0 1.66 4 3 9 3s9-1.34 9-3v-6" />
+                </svg>
+            </div>
+
+            <!-- Glass shapes for composition depth -->
+            <div class="glass-shape glass-1"></div>
+            <div class="glass-shape glass-2"></div>
+            
+            <div class="branding-content">
+                <!-- Frosted Glass Logo Capsule Box -->
+                <div class="brand-logo-glass-box">
+                    <img src="./Image/logo.png" alt="Ecometrix Logo" class="brand-logo">
+                </div>
+                <div class="company-name">Ecometrix Consultants Pvt. Ltd.</div>
+                <h1 class="app-title">Budget Management System</h1>
+                <p class="app-tagline">Internal Financial Operations & Budget Management</p>
+            </div>
+        </div>
+
+        <!-- Right Side: Centered Corporate Auth Card -->
+        <div class="login-panel">
+            <div class="login-card">
+                <div class="login-card-header">
+                    <h2 class="card-title">Portal Access</h2>
+                    <p class="card-subtitle">Please enter your authorized credentials to enter the workspace.</p>
+                </div>
+
+                <form id="loginForm" class="login-form">
+                    <!-- Role Dropdown -->
+                    <div class="form-field">
+                        <label for="role" class="field-label">Security Role</label>
+                        <div class="field-input-wrapper">
+                            <i data-lucide="shield" class="input-icon"></i>
+                            <select id="role" required>
+                                <option value="">Select Security Role</option>
+                                <option value="Finance Admin">Finance Admin</option>
+                                <option value="Admin(CEO)">Admin(CEO)</option>
+                                <option value="Account Team">Account Team</option>
+                            </select>
+                            <i data-lucide="chevron-down" class="chevron-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- User ID Input -->
+                    <div class="form-field">
+                        <label for="username" class="field-label">User ID</label>
+                        <div class="field-input-wrapper">
+                            <i data-lucide="user" class="input-icon"></i>
+                            <input id="username" type="text" placeholder="Enter your identity code" required autocomplete="username">
+                        </div>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div class="form-field">
+                        <div class="label-row">
+                            <label for="password" class="field-label">Password</label>
+                            <span class="caps-lock-badge hidden" id="capsWarning">
+                                <i data-lucide="keyboard"></i> Caps Lock ON
+                            </span>
+                        </div>
+                        <div class="field-input-wrapper">
+                            <i data-lucide="key" class="input-icon"></i>
+                            <input id="password" type="password" placeholder="••••••••" required autocomplete="current-password">
+                            <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle Password Visibility">
+                                <i data-lucide="eye-off"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Remember Me / Forgot Password -->
+                    <div class="form-options">
+                        <label class="remember-me-label">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkbox-indicator"></span>
+                            <span class="label-text">Keep me signed in</span>
+                        </label>
+                        <a href="#" class="forgot-link">Forgot Password?</a>
+                    </div>
+
+                    <!-- Live Message Box -->
+                    <div id="loginMessage" class="error-message-area"></div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="signin-button" id="signinBtn">
+                        <span class="btn-spinner hidden" id="btnSpinner"></span>
+                        <span class="btn-text">Access Account</span>
+                        <i data-lucide="arrow-right" class="arrow-icon"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Corporate Footer -->
+            <footer class="portal-footer">
+                <p>© 2026 Ecometrix Consultants Pvt. Ltd. All rights reserved.</p>
+                <p class="security-text">Authorized Personnel Only • Secure Internal Access • Encrypted Session</p>
+            </footer>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script>
+        // API Base configuration
+        const API_BASE = "http://localhost:5050";
+
+        // Initialise Lucide icons
+        lucide.createIcons();
+
+        // Main Login handler
+        async function handleLogin(event) {
+            event.preventDefault();
+            const role = document.getElementById("role").value;
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value;
+            const messageBox = document.getElementById("loginMessage");
+            const submitBtn = document.getElementById("signinBtn");
+            const btnText = submitBtn.querySelector(".btn-text");
+            const spinner = submitBtn.querySelector(".btn-spinner");
+
+            messageBox.innerText = "";
+            
+            // Add loading states
+            submitBtn.disabled = true;
+            if (btnText) btnText.innerText = "Signing In...";
+            if (spinner) spinner.classList.remove("hidden");
+
+            try {
+                const response = await fetch(`${API_BASE}/api/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ role, username, password })
+                });
+
+                const result = await response.json().catch(() => ({}));
+
+                if (!response.ok) {
+                    throw new Error(result.error || "Login failed.");
+                }
+
+                localStorage.setItem("financeAuth", JSON.stringify({
+                    username: result.user.username,
+                    role: result.user.role,
+                    fullName: result.user.fullName || result.user.username
+                }));
+
+                window.location.href = "finance.html";
+            } catch (error) {
+                messageBox.innerText = error.message;
+                
+                // Remove loading states on failure
+                submitBtn.disabled = false;
+                if (btnText) btnText.innerText = "Access Account";
+                if (spinner) spinner.classList.add("hidden");
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            // Bind Login submit
+            document.getElementById("loginForm").addEventListener("submit", handleLogin);
+
+            const passwordInput = document.getElementById("password");
+            const togglePassword = document.getElementById("togglePassword");
+            const capsWarning = document.getElementById("capsWarning");
+
+            // Password field toggle visibility
+            togglePassword.addEventListener("click", () => {
+                const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+                passwordInput.setAttribute("type", type);
+                
+                // Toggle Lucide icons
+                const icon = togglePassword.querySelector("i");
+                if (type === "password") {
+                    icon.setAttribute("data-lucide", "eye-off");
+                } else {
+                    icon.setAttribute("data-lucide", "eye");
+                }
+                lucide.createIcons();
+            });
+
+            // Caps Lock indicator
+            passwordInput.addEventListener("keydown", (e) => {
+                if (e.getModifierState && e.getModifierState("CapsLock")) {
+                    capsWarning.classList.remove("hidden");
+                } else {
+                    capsWarning.classList.add("hidden");
+                }
+            });
+
+            passwordInput.addEventListener("keyup", (e) => {
+                if (e.getModifierState && e.getModifierState("CapsLock")) {
+                    capsWarning.classList.remove("hidden");
+                } else {
+                    capsWarning.classList.add("hidden");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
